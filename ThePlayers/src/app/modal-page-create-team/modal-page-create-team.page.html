@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Crea team</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="CreateTeam()">
+    <ion-item>
+      <ion-label>Nome Team</ion-label>
+      <ion-input type="text" [(ngModel)]="teamName" name="teamName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Descrizione</ion-label>
+      <ion-input type="text" [(ngModel)]="description" name="description"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Avatar</ion-label>
+      <ion-input type="text" [(ngModel)]="avatarId" name="avatarId"></ion-input>
+    </ion-item>
+    <ion-button ion-button type="submit" block>Crea Team</ion-button>
+  </form>
+</ion-content>
