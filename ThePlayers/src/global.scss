@@ -35,3 +35,20 @@
     border-radius: 10px;
     box-shadow: 0px 0px 10vh rgba(255,255,255,0.2)
 }
+
+//small modal
+.small-modal{
+    width: 90vw;
+    height: 35vh;
+    position: absolute;
+    top: 37vh;
+    left: 5vw;
+    border-radius: 10px;
+    box-shadow: 0px 0px 310vh rgba(255,255,255,1)
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,500;0,600;0,700;1,400;1,500;1,600&display=swap');
+
+*{
+    font-family: 'Montserrat', sans-serif; 
+}

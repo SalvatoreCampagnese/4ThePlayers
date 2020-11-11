@@ -19,7 +19,6 @@ export class ModalPageCreateTeamPage implements OnInit {
 
   ngOnInit() {
     console.log(this.firstName)
-    document.body.classList.toggle('dark');
   }
 
   CreateTeam(){

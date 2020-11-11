@@ -27,6 +27,10 @@ const routes: Routes = [
     path: 'modal-page-create-team',
     loadChildren: () => import('./modal-page-create-team/modal-page-create-team.module').then( m => m.ModalPageCreateTeamPageModule)
   },
+  {
+    path: 'modal-registration',
+    loadChildren: () => import('./modal-registration/modal-registration.module').then( m => m.ModalRegistrationPageModule)
+  },
 ];
 
 @NgModule({
