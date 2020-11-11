@@ -1,27 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Plugins } from '@capacitor/core';
+import { AuthService } from 'src/app/services/auth.service';
+const { Storage } = Plugins;
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
+
 export class LoginPage implements OnInit {
 
   // Inizializzo le variabili da utilizzare per il login
   email: String;
   password: String;
-
-  constructor(private router: Router) { }
+  responseLogin: any;
+  constructor(private router: Router, public httpClient: HttpClient,
+    private authService: AuthService) { }
 
   ngOnInit() {
     document.body.classList.toggle('dark');
   }
 
-  LoginForm(){
-    console.log(this.email)
-    console.log(this.password)
-    this.router.navigateByUrl('/home');
+  LoginForm(){    
+    this.authService.login(this.email, this.password).subscribe(
+      data => {
+        this.router.navigateByUrl('/home')
+      },
+      error => {
+        window.alert("Username o password errati.");
+      }
+    );
   }
 
   SignUpPage(){

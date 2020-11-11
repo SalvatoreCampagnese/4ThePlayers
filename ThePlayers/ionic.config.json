@@ -1,7 +1,8 @@
 {
   "name": "ThePlayers",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
 }
