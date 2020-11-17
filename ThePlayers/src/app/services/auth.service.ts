@@ -19,7 +19,6 @@ export class AuthService {
   ) { }
 
   login(email: String, password: String) {
-    debugger;
     return this.http.post(this.env.API_URL + 'auth/login',
       {email: email, password: password}
     ).pipe(
