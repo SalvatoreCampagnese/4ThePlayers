@@ -1,23 +1,28 @@
+<div class="modal-container">
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()"><i class="fas fa-times"></i></ion-button>
+    </ion-buttons>
     <ion-title>Crea team</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form (ngSubmit)="CreateTeam()">
-    <ion-item>
-      <ion-label>Nome Team</ion-label>
-      <ion-input type="text" [(ngModel)]="teamName" name="teamName"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label>Descrizione</ion-label>
-      <ion-input type="text" [(ngModel)]="description" name="description"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label>Avatar</ion-label>
-      <ion-input type="text" [(ngModel)]="avatarId" name="avatarId"></ion-input>
-    </ion-item>
-    <ion-button ion-button type="submit" block>Crea Team</ion-button>
-  </form>
+    <form (ngSubmit)="CreateTeam()">
+      <ion-item color="white">
+        <ion-label><i class="fas fa-address-card"></i></ion-label>
+        <ion-input type="text" [(ngModel)]="teamName" name="teamName" placeholder="Nome team"></ion-input>
+      </ion-item>
+      <ion-item color="white">
+        <ion-label><i class="fas fa-pencil-alt"></i></ion-label>
+        <ion-textarea type="text" [(ngModel)]="description" name="description" placeholder="Descrizione"></ion-textarea>
+      </ion-item>
+      <ion-item color="white">
+        <ion-label><i class="fas fa-user"></i></ion-label>
+        <ion-input type="text" [(ngModel)]="avatarId" name="avatarId" placeholder="Avatar"></ion-input>
+      </ion-item>
+      <ion-button class="submit-button" type="submit" block>Crea Team</ion-button>
+    </form>
 </ion-content>
+</div>

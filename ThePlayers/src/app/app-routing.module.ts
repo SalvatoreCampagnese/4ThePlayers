@@ -34,7 +34,11 @@ const routes: Routes = [
   {
     path: 'logout',
     loadChildren: () => import('./logout/logout.module').then( m => m.LogoutPageModule)
+  },  {
+    path: 'game-detail',
+    loadChildren: () => import('./game-detail/game-detail.module').then( m => m.GameDetailPageModule)
   },
+
 
 ];
 

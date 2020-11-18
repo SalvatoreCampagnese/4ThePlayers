@@ -1,10 +1,10 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar class="background-primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Homepage
+      {{this.gameName}}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -12,17 +12,17 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Homepage</ion-title>
+      <ion-title size="large">Tornei</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <div id="container">
-    <strong>Giochi</strong>
+    <strong>Tornei</strong>
     <ion-grid>
-      <ion-row *ngFor="let game of gamesList">
-        <ion-col (click)="DetailGame(game.id, game.name)">
+      <ion-row *ngFor="let tournament of tournamentsList">
+        <ion-col (click)="DetailTournament(tournament.id, tournament.name)">
           <div class="container-info-game">
-            <div class="titolo">{{game.name}}</div>
+            <div class="titolo">{{tournament.name}}</div>
           </div>
           <ion-img class="logo" src="https://i.imgur.com/Z33XfBY.jpg"></ion-img>
         </ion-col>
@@ -30,4 +30,3 @@
     </ion-grid>
   </div>
 </ion-content>
-

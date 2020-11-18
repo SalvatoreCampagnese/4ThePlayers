@@ -9,12 +9,20 @@ ion-content {
     flex-direction: column;
 
     &#backgroundimage{
-        --background: url('https://i.pinimg.com/originals/9d/ab/0e/9dab0ed0c11eeb8aeedfe9e404c38344.png');
+        --background: url('../../assets/img/login-bg.jpg') 20% 30%;
     }
 }
+
 .logo{
     margin-bottom: 5vh;
+    margin-left: 10vw;
+    margin-top: 10vw;
     max-width: 80vw;
+    min-width: 80vw;
+}
+
+.box-form{
+    background: white;
 }
 
 ion-card-content{
@@ -38,19 +46,11 @@ form, ion-card-content{
 ion-item{
     width: 94vw !important;
     border-radius: 5px;
+    border: 1px solid var(--ion-color-primary);
 
     &:first-child{
         margin-bottom: 20px;
     }
-}
-
-.ion-color-white {
-    --ion-color-base: var(--ion-color-white) !important;
-    --ion-color-base-rgb: var(--ion-color-white-rgb) !important;
-    --ion-color-contrast: var(--ion-color-white-contrast) !important;
-    --ion-color-contrast-rgb: var(--ion-color-white-contrast-rgb) !important;
-    --ion-color-shade: var(--ion-color-white-shade) !important;
-    --ion-color-tint: var(--ion-color-white-tint) !important;
 }
 
 .submit-button{
@@ -68,4 +68,8 @@ ion-item{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.native-input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 50px white inset !important;
 }

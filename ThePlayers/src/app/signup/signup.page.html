@@ -4,15 +4,15 @@
     <ion-img class="logo" src="../../assets/img/logo.png"></ion-img>
     <form (ngSubmit)="SignupForm()">
       <ion-item color="white">
-        <ion-label>Username</ion-label>
+        <ion-label><i class="fas fa-user"></i></ion-label>
         <ion-input type="text" [(ngModel)]="username" name="username"></ion-input>
       </ion-item>
       <ion-item color="white">
-        <ion-label>Email</ion-label>
+        <ion-label><i class="fas fa-at"></i></ion-label>
         <ion-input type="email" [(ngModel)]="email" name="email"></ion-input>
       </ion-item>
       <ion-item color="white">
-        <ion-label>Password</ion-label>
+        <ion-label><i class="fas fa-key"></i></ion-label>
         <ion-input type="password" [(ngModel)]="password" name="password"></ion-input>
       </ion-item>
       <ion-button class="submit-button" type="submit" block>Registrati</ion-button>

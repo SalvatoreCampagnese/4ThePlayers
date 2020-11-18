@@ -32,17 +32,16 @@ export class HomePage {
     });
   }
 
-  async DetailTournament(idTournament) {
-    this.router.navigate(["/tournament-detail"], {
-      queryParams: { idTournament: idTournament },
+  async DetailGame(idGame, nomeGioco) {
+    this.router.navigate(["/game-detail"], {
+      queryParams: { idGame: idGame, gameName: nomeGioco },
     });
   }
 
   getGames(token) {
-    const obj = JSON.parse(token);
     const baseUrl = "https://just-fight.herokuapp.com";
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${obj.token.token}`,
+      Authorization: `Bearer ${token}`,
     });
     this.http.get(`${baseUrl}/game`, { headers }).subscribe((response) => {
       this.gamesList = response;

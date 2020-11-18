@@ -27,11 +27,9 @@
 
 //basic modal
 .simple-modal{
-    width: 90vw;
-    height: 90vh;
+    width: 100vw;
+    height: 100vh;
     position: absolute;
-    top: 5vh;
-    left: 5vw;
     border-radius: 10px;
     box-shadow: 0px 0px 10vh rgba(255,255,255,0.2)
 }
@@ -51,4 +49,22 @@
 
 *{
     font-family: 'Montserrat', sans-serif; 
+}
+
+.ion-color-white {
+    --ion-color-base: var(--ion-color-white) !important;
+    --ion-color-base-rgb: var(--ion-color-white-rgb) !important;
+    --ion-color-contrast: var(--ion-color-white-contrast) !important;
+    --ion-color-contrast-rgb: var(--ion-color-white-contrast-rgb) !important;
+    --ion-color-shade: var(--ion-color-white-shade) !important;
+    --ion-color-tint: var(--ion-color-white-tint) !important;
+}
+.background-primary{
+    --background: var(--color-toolbar-background) !important;
+}
+
+.modal-container{
+    width: 100vw;
+    height: 100vh;
+    --background: var(--ion-background-opacitylow);
 }

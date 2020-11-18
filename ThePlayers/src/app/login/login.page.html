@@ -3,14 +3,14 @@
     <ion-img class="logo" src="../../assets/img/logo.png"></ion-img>
     <form (ngSubmit)="LoginForm()">
       <ion-item color="white">
-        <ion-label>Email</ion-label>
+        <ion-label><i class="fas fa-at"></i></ion-label>
         <ion-input type="email" [(ngModel)]="email" name="email"></ion-input>
       </ion-item>
       <ion-item color="white">
-        <ion-label>Password</ion-label>
+        <ion-label><i class="fas fa-key"></i></ion-label>
         <ion-input type="password" [(ngModel)]="password" name="password"></ion-input>
       </ion-item>
-      <ion-button class="submit-button" type="submit" block>Accedi</ion-button>
+      <ion-button class="submit-button" type="submit">Accedi</ion-button>
     </form>
   </ion-card-content>
   <ion-card-content class="align-bottom">

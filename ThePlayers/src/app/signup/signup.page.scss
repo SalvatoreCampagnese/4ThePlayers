@@ -9,7 +9,7 @@ ion-content {
     flex-direction: column;
 
     &#backgroundimage{
-        --background: url('https://i.pinimg.com/originals/9d/ab/0e/9dab0ed0c11eeb8aeedfe9e404c38344.png');
+        --background: url('../../assets/img/login-bg.jpg') 20% 30%;
     }
 }
 .logo{
@@ -43,15 +43,6 @@ ion-item{
         margin-bottom: 0px;
     }
     margin-bottom: 20px;
-}
-
-.ion-color-white {
-    --ion-color-base: var(--ion-color-white) !important;
-    --ion-color-base-rgb: var(--ion-color-white-rgb) !important;
-    --ion-color-contrast: var(--ion-color-white-contrast) !important;
-    --ion-color-contrast-rgb: var(--ion-color-white-contrast-rgb) !important;
-    --ion-color-shade: var(--ion-color-white-shade) !important;
-    --ion-color-tint: var(--ion-color-white-tint) !important;
 }
 
 .submit-button{
