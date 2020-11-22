@@ -15,6 +15,8 @@ export class GameDetailPage implements OnInit {
   gameName: String;
   tournamentsList: any;
 
+  errorText: string;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -59,34 +61,20 @@ export class GameDetailPage implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-    this.http.get(`${baseUrl}/tournaments`, { headers }).subscribe(
-      (response) => {
-        this.tournamentsList = response;
-        //removeee
-        this.tournamentsList = [
-          {
-            name: "COD6",
-            id: "5fb53f85686bf952180c369d",
-          },
-          {
-            name: "FIFA 2020",
-            id: "5fb54c79df42b3001703437c",
-          },
-        ];
-      },
-      (error) => {
-        // Da rimuovere
-        this.tournamentsList = [
-          {
-            name: "COD6",
-            id: "5fb53f85686bf952180c369d",
-          },
-          {
-            name: "FIFA 2020",
-            id: "5fb54c79df42b3001703437c",
-          },
-        ];
-      }
-    );
+    this.http
+      .get(`${baseUrl}/tournament/?gameId=${this.idGame}`, { headers })
+      .subscribe(
+        (response) => {
+          this.tournamentsList = response;
+          if (this.tournamentsList.length == 0) {
+            this.errorText = "Non ci sono tornei per questo gioco.";
+          } else {
+            this.errorText = null;
+          }
+        },
+        (error) => {
+          window.alert("errore tornei");
+        }
+      );
   }
 }

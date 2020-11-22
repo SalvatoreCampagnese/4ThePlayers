@@ -9,9 +9,19 @@
 
 <ion-content [fullscreen]="true">
 
-  <div id="container">
-    <ion-text>Non sei ancora iscritto alla competizione.</ion-text>
-    <ion-button (click)="showCreateTeamModal()">Crea un Team</ion-button>
+  <div id="container" >
+    <!-- Mostro se deve creare il team -->
+    <ion-text *ngIf="showSubscribeBox == true">Non sei ancora iscritto alla competizione.</ion-text>
+    <ion-button (click)="showCreateTeamModal()" *ngIf="showSubscribeBox == true">Crea un Team</ion-button>
+
+    
+    <!-- Mostro se non rispecchia il nr di membri corretto -->
+    <ion-text *ngIf="showErrorTeam == true" padding="5px">Non hai un nr. adeguato di membri per pubblicare una sfida.</ion-text>
+
+    
+    <!-- Mostro se è ok -->
+    <ion-text *ngIf="showCreateMatch == true" >Gioca ora!</ion-text>
+    <ion-button (click)="showCreateMatch()" *ngIf="showCreateMatch == true">Crea un Match</ion-button>
   </div>
   
   <ion-title>Classifica</ion-title>
@@ -24,29 +34,13 @@
       <ion-col size="1">D</ion-col>
       <ion-col size="2">L</ion-col>
     </ion-row>
-    <ion-row class="fair">
-      <ion-col size="1">1</ion-col>
-      <ion-col size="5">Nome team lungo...</ion-col>
-      <ion-col size="2">100</ion-col>
-      <ion-col size="1">2</ion-col>
-      <ion-col size="1">33</ion-col>
-      <ion-col size="2">100</ion-col>
-    </ion-row>
-    <ion-row >
-      <ion-col size="1">2</ion-col>
-      <ion-col size="5">Nome team</ion-col>
-      <ion-col size="2">70</ion-col>
-      <ion-col size="1">12</ion-col>
-      <ion-col size="1">2</ion-col>
-      <ion-col size="2">1</ion-col>
-    </ion-row>
-    <ion-row class="fair">
-      <ion-col size="1">3</ion-col>
-      <ion-col size="5">Nome team</ion-col>
-      <ion-col size="2">19</ion-col>
+    <ion-row class="fair" *ngFor="let team of teamsList, let i = index">
+      <ion-col size="1">{{i + 1}}</ion-col>
+      <ion-col size="6">{{team.name}}</ion-col>
+      <ion-col size="2">{{team.elo}}</ion-col>
       <ion-col size="1">0</ion-col>
       <ion-col size="1">0</ion-col>
-      <ion-col size="2">100</ion-col>
+      <ion-col size="1">0</ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>

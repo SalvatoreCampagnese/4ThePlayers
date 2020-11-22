@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
-import { ModalRegistrationPage } from '../modal-registration/modal-registration.page';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { ModalController } from "@ionic/angular";
+import { ModalRegistrationPage } from "../modal-registration/modal-registration.page";
 
 @Component({
-  selector: 'app-signup',
-  templateUrl: './signup.page.html',
-  styleUrls: ['./signup.page.scss'],
+  selector: "app-signup",
+  templateUrl: "./signup.page.html",
+  styleUrls: ["./signup.page.scss"],
 })
 export class SignupPage implements OnInit {
   // Inizializzo le variabili da utilizzare per la registrazione
@@ -14,30 +14,29 @@ export class SignupPage implements OnInit {
   email: String;
   password: String;
 
-  constructor(private router: Router, private modalController: ModalController) { }
+  constructor(
+    private router: Router,
+    private modalController: ModalController
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  SignupForm(){
-    console.log(this.username)
-    console.log(this.email)
-    console.log(this.password)
+  SignupForm() {
     this.showCreateTeamModal();
-    
   }
   async showCreateTeamModal() {
     const modal = await this.modalController.create({
       component: ModalRegistrationPage,
-      cssClass: 'small-modal',
+      cssClass: "small-modal",
       componentProps: {
-        'textToShow': 'Ti sei registrato con successo! Conferma la tua email per accedere al tuo account.'
-      }
+        textToShow:
+          "Ti sei registrato con successo! Conferma la tua email per accedere al tuo account.",
+      },
     });
     return await modal.present();
   }
 
-  LoginPage(){
-    this.router.navigateByUrl('/login');
+  LoginPage() {
+    this.router.navigateByUrl("/login");
   }
 }

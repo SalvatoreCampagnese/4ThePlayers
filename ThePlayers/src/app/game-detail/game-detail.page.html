@@ -18,13 +18,17 @@
 
   <div id="container">
     <strong>Tornei</strong>
+    <div>
+      <br/>
+      <label>{{this.errorText}}</label>
+    </div>
     <ion-grid>
       <ion-row *ngFor="let tournament of tournamentsList">
         <ion-col (click)="DetailTournament(tournament.id, tournament.name)">
           <div class="container-info-game">
             <div class="titolo">{{tournament.name}}</div>
           </div>
-          <ion-img class="logo" src="https://i.imgur.com/Z33XfBY.jpg"></ion-img>
+          <ion-img class="logo" src="{{tournament.imgUrl || default.png}}"></ion-img>
         </ion-col>
       </ion-row>
     </ion-grid>
