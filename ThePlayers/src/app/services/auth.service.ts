@@ -42,10 +42,9 @@ export class AuthService {
         })
       );
   }
-  register(fName: String, lName: String, email: String, password: String) {
+  register(userName: String, email: String, password: String) {
     return this.http.post(this.env.API_URL + "auth/signup", {
-      fName: fName,
-      lName: lName,
+      username: userName,
       email: email,
       password: password,
     });

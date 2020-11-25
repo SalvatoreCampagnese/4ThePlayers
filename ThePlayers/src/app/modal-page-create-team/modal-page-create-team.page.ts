@@ -12,18 +12,16 @@ const { Storage } = Plugins;
   styleUrls: ["./modal-page-create-team.page.scss"],
 })
 export class ModalPageCreateTeamPage implements OnInit {
+  idTournament: String;
+  teamname: string;
+  avatarId: String;
+  created: Boolean;
   constructor(
     private modalController: ModalController,
     private authService: AuthService,
     private http: HttpClient,
     private router: Router
   ) {}
-
-  @Input() idTournament: string;
-
-  teamName: string;
-  avatarId: string;
-  created: boolean;
 
   ngOnInit() {}
 
@@ -45,7 +43,7 @@ export class ModalPageCreateTeamPage implements OnInit {
       Authorization: `Bearer ${token}`,
     });
     const dataPost = {
-      name: this.teamName,
+      name: this.teamname,
     };
     this.http
       .post(

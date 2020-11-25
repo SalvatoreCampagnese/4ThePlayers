@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { Plugins } from "@capacitor/core";
 import { AuthService } from "src/app/services/auth.service";
 const { Storage } = Plugins;
+import { MenuController } from "@ionic/angular";
 
 @Component({
   selector: "app-login",
@@ -18,8 +19,13 @@ export class LoginPage implements OnInit {
   constructor(
     private router: Router,
     public httpClient: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private menuCtrl: MenuController
   ) {}
+
+  ionViewWillEnter() {
+    this.menuCtrl.enable(false);
+  }
 
   ngOnInit() {
     document.body.classList.toggle("dark");

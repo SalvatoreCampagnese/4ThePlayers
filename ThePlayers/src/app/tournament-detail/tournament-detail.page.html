@@ -1,29 +1,34 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-    <ion-menu-button></ion-menu-button>
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Torneo</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
-  <div id="container" >
+  <div id="container">
     <!-- Mostro se deve creare il team -->
-    <ion-text *ngIf="showSubscribeBox == true">Non sei ancora iscritto alla competizione.</ion-text>
-    <ion-button (click)="showCreateTeamModal()" *ngIf="showSubscribeBox == true">Crea un Team</ion-button>
+    <ion-text *ngIf="showSubscribeBox == true"
+      >Non sei ancora iscritto alla competizione.</ion-text
+    >
+    <ion-button (click)="showCreateTeamModal()" *ngIf="showSubscribeBox == true"
+      >Crea un Team</ion-button
+    >
 
-    
     <!-- Mostro se non rispecchia il nr di membri corretto -->
-    <ion-text *ngIf="showErrorTeam == true" padding="5px">Non hai un nr. adeguato di membri per pubblicare una sfida.</ion-text>
+    <ion-text *ngIf="showErrorTeam == true" padding="5px"
+      >Non hai un nr. adeguato di membri per pubblicare una sfida.</ion-text
+    >
 
-    
     <!-- Mostro se è ok -->
-    <ion-text *ngIf="showCreateMatch == true" >Gioca ora!</ion-text>
-    <ion-button (click)="showCreateMatch()" *ngIf="showCreateMatch == true">Crea un Match</ion-button>
+    <ion-text *ngIf="showCreateMatch == true">Gioca ora!</ion-text>
+    <ion-button (click)="showCreateMatch()" *ngIf="showCreateMatch == true"
+      >Crea un Match</ion-button
+    >
   </div>
-  
+
   <ion-title>Classifica</ion-title>
   <ion-grid>
     <ion-row class="header">
@@ -36,8 +41,8 @@
     </ion-row>
     <ion-row class="fair" *ngFor="let team of teamsList, let i = index">
       <ion-col size="1">{{i + 1}}</ion-col>
-      <ion-col size="6">{{team.name}}</ion-col>
-      <ion-col size="2">{{team.elo}}</ion-col>
+      <ion-col size="6">{{team && team.name}}</ion-col>
+      <ion-col size="2">{{team && team.elo}}</ion-col>
       <ion-col size="1">0</ion-col>
       <ion-col size="1">0</ion-col>
       <ion-col size="1">0</ion-col>

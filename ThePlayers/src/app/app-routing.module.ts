@@ -38,6 +38,10 @@ const routes: Routes = [
     path: 'game-detail',
     loadChildren: () => import('./game-detail/game-detail.module').then( m => m.GameDetailPageModule)
   },
+  {
+    path: 'profile',
+    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
+  },
 
 
 ];
