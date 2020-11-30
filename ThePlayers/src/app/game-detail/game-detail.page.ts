@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AuthService } from "src/app/services/auth.service";
 import { Plugins } from "@capacitor/core";
 const { Storage } = Plugins;
+import { GlobalEnv } from "../env";
+import { LoadingController } from "@ionic/angular";
 
 @Component({
   selector: "app-game-detail",
@@ -16,13 +18,24 @@ export class GameDetailPage implements OnInit {
   tournamentsList: any;
 
   errorText: string;
+  loading: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    public env: GlobalEnv,
+    public loadingController: LoadingController
   ) {}
+  async presentLoading() {
+    // Prepare a loading controller
+    this.loading = await this.loadingController.create({
+      message: "Caricamento dei tornei in corso...",
+    });
+    // Present the loading controller
+    await this.loading.present();
+  }
 
   ionViewWillEnter() {
     this.authService.getToken().then(() => {
@@ -57,12 +70,14 @@ export class GameDetailPage implements OnInit {
   }
 
   getTournaments(token) {
-    const baseUrl = "https://just-fight.herokuapp.com";
+    this.presentLoading();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
     this.http
-      .get(`${baseUrl}/tournament/?gameId=${this.idGame}`, { headers })
+      .get(`${this.env.baseUri}/tournaments/?gameId=${this.idGame}`, {
+        headers,
+      })
       .subscribe(
         (response) => {
           this.tournamentsList = response;
@@ -71,8 +86,10 @@ export class GameDetailPage implements OnInit {
           } else {
             this.errorText = null;
           }
+          this.loading.dismiss();
         },
         (error) => {
+          this.loading.dismiss();
           window.alert("errore tornei");
         }
       );

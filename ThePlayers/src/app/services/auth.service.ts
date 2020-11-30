@@ -2,10 +2,11 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { tap } from "rxjs/operators";
 import { Router } from "@angular/router";
-import { EnvService } from "./env.service";
 import { User } from "../models/user";
 import { Plugins } from "@capacitor/core";
 const { Storage } = Plugins;
+
+import { GlobalEnv } from "../env";
 
 @Injectable({
   providedIn: "root",
@@ -15,13 +16,13 @@ export class AuthService {
   token: any;
   constructor(
     private http: HttpClient,
-    private env: EnvService,
-    private router: Router
+    private router: Router,
+    public env: GlobalEnv
   ) {}
 
   login(email: String, password: String) {
     return this.http
-      .post(this.env.API_URL + "auth/login", {
+      .post(this.env.baseUri + "/auth/login", {
         email: email,
         password: password,
       })
@@ -43,7 +44,7 @@ export class AuthService {
       );
   }
   register(userName: String, email: String, password: String) {
-    return this.http.post(this.env.API_URL + "auth/signup", {
+    return this.http.post(this.env.baseUri + "/auth/signup", {
       username: userName,
       email: email,
       password: password,
@@ -59,15 +60,15 @@ export class AuthService {
         this.token["token_type"] + " " + this.token["access_token"],
     });
     return this.http
-      .get<User>(this.env.API_URL + "auth/user", { headers: headers })
+      .get<User>(this.env.baseUri + "auth/user", { headers: headers })
       .pipe(
         tap((user) => {
           return user;
         })
       );
   }
-  getToken() {
-    return Storage.get({ key: "token" }).then(
+  async getToken() {
+    return await Storage.get({ key: "token" }).then(
       (data) => {
         this.token = data.value;
         if (this.token != null) {

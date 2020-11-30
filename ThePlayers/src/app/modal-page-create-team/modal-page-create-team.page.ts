@@ -4,6 +4,7 @@ import { ModalController } from "@ionic/angular";
 import { AuthService } from "../services/auth.service";
 import { Plugins } from "@capacitor/core";
 import { Router } from "@angular/router";
+import { GlobalEnv } from "../env";
 const { Storage } = Plugins;
 
 @Component({
@@ -20,7 +21,8 @@ export class ModalPageCreateTeamPage implements OnInit {
     private modalController: ModalController,
     private authService: AuthService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    public env: GlobalEnv
   ) {}
 
   ngOnInit() {}
@@ -38,7 +40,6 @@ export class ModalPageCreateTeamPage implements OnInit {
   }
 
   createTeamRest(token) {
-    const baseUrl = "https://just-fight.herokuapp.com";
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
@@ -47,7 +48,7 @@ export class ModalPageCreateTeamPage implements OnInit {
     };
     this.http
       .post(
-        `https://just-fight.herokuapp.com/tournament/${this.idTournament}/team`,
+        `${this.env.baseUri}/tournament/${this.idTournament}/teams`,
         dataPost,
         { headers }
       )

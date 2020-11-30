@@ -1,11 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Router } from "@angular/router";
-import { ModalController } from "@ionic/angular";
+import { LoadingController, ModalController } from "@ionic/angular";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ModalPageCreateTeamPage } from "../modal-page-create-team/modal-page-create-team.page";
 import { AuthService } from "src/app/services/auth.service";
 import { Plugins } from "@capacitor/core";
+import { GlobalEnv } from "../env";
 const { Storage } = Plugins;
 
 @Component({
@@ -22,14 +23,28 @@ export class TournamentDetailPage implements OnInit {
   showCreateMatch: boolean;
 
   teamsList: any;
+  userTeam: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public modalController: ModalController,
     private authService: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    public env: GlobalEnv,
+    public loadingController: LoadingController
   ) {}
+
+  loading: any;
+
+  async presentLoading() {
+    // Prepare a loading controller
+    this.loading = await this.loadingController.create({
+      message: "Caricamento dei tornei in corso...",
+    });
+    // Present the loading controller
+    await this.loading.present();
+  }
 
   ngOnInit() {
     this.showSubscribeBox = true;
@@ -72,13 +87,12 @@ export class TournamentDetailPage implements OnInit {
     return await modal.present();
   }
 
-  getTournamentDetail(idTournament, token) {
-    const baseUrl = "https://just-fight.herokuapp.com";
+  async getTournamentDetail(idTournament, token) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
     this.http
-      .get(`${baseUrl}/tournament/${idTournament}`, { headers })
+      .get(`${this.env.baseUri}/tournaments/${idTournament}`, { headers })
       .subscribe(
         (response) => {
           this.tournamentDetail = response;
@@ -86,6 +100,7 @@ export class TournamentDetailPage implements OnInit {
           const userTeam = this.tournamentDetail.userTeam,
             ruleset = this.tournamentDetail.ruleset;
           if (userTeam) {
+            this.userTeam = userTeam;
             this.showSubscribeBox = false;
             // Controllo il nr di players in base a quelli del torneo
             if (
@@ -112,5 +127,41 @@ export class TournamentDetailPage implements OnInit {
           window.alert("errore tornei");
         }
       );
+  }
+  showCreateMatchFn() {
+    return true;
+  }
+
+  showInviteMembers() {
+    if (this.userTeam) {
+      this.router.navigate(["/users"], {
+        queryParams: {
+          teamObj: JSON.stringify(this.userTeam),
+          tournamentId: this.idTournament,
+        },
+      });
+    } else {
+      this.router.navigateByUrl("/users");
+    }
+  }
+
+  showTeamsInfo(teamId) {
+    const teamObj = this.teamsList.find((item) => item._id == teamId);
+    let usersListMembersNames = [],
+      usersListMembersId = [];
+    if (teamObj) {
+      for (let i = 0; i < teamObj.members.length; i++) {
+        const objMemberId = teamObj.members[i].userId;
+        usersListMembersId.push(teamObj.members[i]._id);
+        this.http
+          .get(this.env.baseUri + "/users/" + objMemberId)
+          .subscribe((response) => {
+            usersListMembersNames.push(response[0].username);
+          });
+      }
+    }
+
+    // Mostro il nome degli utenti
+    window.alert(usersListMembersId);
   }
 }

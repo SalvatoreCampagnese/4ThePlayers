@@ -2,10 +2,18 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
+      <ion-badge color="danger" *ngIf="this.env.notificationsCounter"
+        >{{this.env.notificationsCounter}}</ion-badge
+      >
     </ion-buttons>
-    <ion-title>
-      Homepage
-    </ion-title>
+    <ion-title>Homepage</ion-title>
+    <ion-buttons slot="end">
+      <ion-text>50.000</ion-text>
+      <ion-img
+        src="https://freepngimg.com/thumb/joystick/25115-4-joystick-file-thumb.png"
+        style="width: 20px; height: 20px; margin-left: 5px"
+      ></ion-img>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -30,4 +38,3 @@
     </ion-grid>
   </div>
 </ion-content>
-

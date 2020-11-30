@@ -69,6 +69,11 @@
     --background: var(--ion-background-opacitylow);
 }
 .scroll-content
-  {
-    padding-bottom: 0 !important;
-  }
+{
+padding-bottom: 0 !important;
+}
+ion-toolbar {
+--color: #ffffff;
+--background: #061e4e;
+--box-shadow: 0px 0px 5px black;
+}

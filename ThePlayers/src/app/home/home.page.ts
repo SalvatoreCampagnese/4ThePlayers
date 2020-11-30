@@ -1,10 +1,11 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { tap } from "rxjs/operators";
 import { AuthService } from "src/app/services/auth.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Plugins } from "@capacitor/core";
-import { MenuController } from "@ionic/angular";
+import { LoadingController, MenuController } from "@ionic/angular";
+import { GlobalEnv } from "../env";
 
 const { Storage } = Plugins;
 
@@ -13,15 +14,28 @@ const { Storage } = Plugins;
   templateUrl: "home.page.html",
   styleUrls: ["home.page.scss"],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
     private http: HttpClient,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    public env: GlobalEnv,
+    public loadingController: LoadingController
   ) {}
   gamesList: any;
-  ionViewWillEnter() {
+  loading: any;
+
+  async presentLoading() {
+    // Prepare a loading controller
+    this.loading = await this.loadingController.create({
+      message: "Caricamento dei giochi corso...",
+    });
+    // Present the loading controller
+    //await this.loading.present();
+  }
+
+  ngOnInit() {
     this.authService.getToken().then(() => {
       if (this.authService.isLoggedIn) {
         Storage.get({ key: "token" }).then((data) => {
@@ -41,13 +55,15 @@ export class HomePage {
     });
   }
 
-  getGames(token) {
-    const baseUrl = "https://just-fight.herokuapp.com";
+  async getGames(token) {
+    this.presentLoading();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-    this.http.get(`${baseUrl}/game`, { headers }).subscribe((response) => {
-      this.gamesList = response;
-    });
+    this.http
+      .get(`${this.env.baseUri}/games`, { headers })
+      .subscribe((response) => {
+        this.gamesList = response;
+      });
   }
 }

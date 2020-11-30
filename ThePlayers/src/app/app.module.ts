@@ -13,6 +13,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
+import { GlobalEnv } from "./env";
+import { Network } from "@ionic-native/network/ngx";
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,12 +24,15 @@ import { fab } from "@fortawesome/free-brands-svg-icons";
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    //Network,
     //FontAwesomeModule,
   ],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    GlobalEnv,
+    Network,
   ],
   bootstrap: [AppComponent],
 })

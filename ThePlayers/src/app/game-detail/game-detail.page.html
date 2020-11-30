@@ -1,11 +1,9 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="background-primary">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>
-      {{this.gameName}}
-    </ion-title>
+    <ion-title> {{this.gameName}} </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -19,7 +17,7 @@
   <div id="container">
     <strong>Tornei</strong>
     <div>
-      <br/>
+      <br />
       <label>{{this.errorText}}</label>
     </div>
     <ion-grid>
@@ -28,7 +26,7 @@
           <div class="container-info-game">
             <div class="titolo">{{tournament.name}}</div>
           </div>
-          <ion-img class="logo" src="{{tournament.imgUrl || default.png}}"></ion-img>
+          <ion-img class="logo" src="{{tournament.imgUrl}}"></ion-img>
         </ion-col>
       </ion-row>
     </ion-grid>
