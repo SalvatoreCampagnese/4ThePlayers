@@ -23,9 +23,9 @@ export class ModalPageCreateTeamPage implements OnInit {
     private http: HttpClient,
     private router: Router,
     public env: GlobalEnv
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   CreateTeam() {
     this.authService.getToken().then(() => {
@@ -48,7 +48,7 @@ export class ModalPageCreateTeamPage implements OnInit {
     };
     this.http
       .post(
-        `${this.env.baseUri}/tournament/${this.idTournament}/teams`,
+        `${this.env.baseUri}/tournaments/${this.idTournament}/teams`,
         dataPost,
         { headers }
       )

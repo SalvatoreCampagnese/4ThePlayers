@@ -33,7 +33,7 @@ export class TournamentDetailPage implements OnInit {
     private http: HttpClient,
     public env: GlobalEnv,
     public loadingController: LoadingController
-  ) {}
+  ) { }
 
   loading: any;
 
@@ -78,10 +78,9 @@ export class TournamentDetailPage implements OnInit {
       },
     });
     modal.onDidDismiss().then((data) => {
-      const created = data["created"]; // Here's your selected user!
+      const created = data['data'].created;
       if (created) {
-        this.showErrorTeam = true;
-        this.showSubscribeBox = false;
+        location.reload();
       }
     });
     return await modal.present();
@@ -109,6 +108,7 @@ export class TournamentDetailPage implements OnInit {
             ) {
               // Il team è ok e faccio fare le sfide
               this.showCreateMatch = true;
+              this.showErrorTeam = false;
             } else {
               // Il team non rispetta il nr di giocatori necessari
               this.showErrorTeam = true;
@@ -116,9 +116,10 @@ export class TournamentDetailPage implements OnInit {
           } else {
             // Non ce l'ha
           }
-
           this.teamsList = this.tournamentDetail.teams;
-          this.teamsList.push(this.tournamentDetail.userTeam);
+          if (this.tournamentDetail.userTeam) {
+            this.teamsList.push(this.tournamentDetail.userTeam);
+          }
           if (this.teamsList[0] === undefined) {
             this.teamsList = [];
           }
@@ -145,23 +146,21 @@ export class TournamentDetailPage implements OnInit {
     }
   }
 
-  showTeamsInfo(teamId) {
-    const teamObj = this.teamsList.find((item) => item._id == teamId);
-    let usersListMembersNames = [],
-      usersListMembersId = [];
-    if (teamObj) {
-      for (let i = 0; i < teamObj.members.length; i++) {
-        const objMemberId = teamObj.members[i].userId;
-        usersListMembersId.push(teamObj.members[i]._id);
-        this.http
-          .get(this.env.baseUri + "/users/" + objMemberId)
-          .subscribe((response) => {
-            usersListMembersNames.push(response[0].username);
-          });
-      }
-    }
 
-    // Mostro il nome degli utenti
-    window.alert(usersListMembersId);
+  async showTeamsInfo(teamId) {
+    const token = await Storage.get({ key: "token" }).then((data) => {
+      return data.value;
+    });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    const teamObj = this.teamsList.find((item) => item._id == teamId);
+    if (teamObj) {
+      this.router.navigate(["/team-detail"], {
+        queryParams: {
+          teamObj: JSON.stringify(teamObj),
+        },
+      });
+    }
   }
 }

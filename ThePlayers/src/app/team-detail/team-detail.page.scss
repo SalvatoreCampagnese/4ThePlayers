@@ -1,0 +1,30 @@
+
+.team-detail-avatar{
+    width: 100%;
+    padding-top: 15px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .team-avatar{
+        width: 100px;
+        height: 100px;
+
+        border-radius: 10px;
+
+        margin-bottom: 5px;
+    }
+}
+.members-list-container{
+    margin-top: 20px;
+
+    ion-text{
+        margin-left: 10px;
+        font-size: 1.2em;
+    }
+    .leader-text{
+        color: red !important;
+    }
+}

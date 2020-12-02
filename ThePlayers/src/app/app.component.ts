@@ -22,6 +22,7 @@ export class AppComponent {
   navigate: any;
   notifications: any;
   token: string;
+  getInviteInterval: any;
 
   constructor(
     private platform: Platform,
@@ -59,13 +60,7 @@ export class AppComponent {
       this.splashScreen.hide();
     });
     this.authService.getToken().then(() => {
-      if (this.authService.isLoggedIn) {
-        Storage.get({ key: "token" }).then((data) => {
-          if (data.value) {
-            //this.getInvites();
-          }
-        });
-      }
+      this.getInvites();
     });
   }
 
@@ -76,24 +71,35 @@ export class AppComponent {
         return data.value;
       }
     });
-    const decodedToken = jwtDecode(token);
-    const userId = decodedToken["id"];
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-    this.http.get(this.env.baseUri + `/users/${userId}`, { headers }).subscribe(
-      (resp) => {
-        if (resp && resp["invites"] && resp["invites"].length) {
-          this.env.notificationsCounter = resp["invites"].length;
-        } else {
-          this.env.notificationsCounter = 0;
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken["id"];
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+      this.http.get(this.env.baseUri + `/users/${userId}`, { headers }).subscribe(
+        (resp) => {
+          if (resp && resp["user"].invites && resp["user"].invites.length) {
+            let count = 0;
+            for (let i = 0; i < resp["user"].invites.length; i++) {
+              if (resp["user"].invites[i].status == "PENDING") {
+                count++;
+              }
+            }
+            this.env.notificationsCounter = count;
+          } else {
+            this.env.notificationsCounter = 0;
+          }
+          this.sideMenu();
+        },
+        (error) => {
+          // Empty
         }
-      },
-      (error) => {
-        // Empty
-      }
-    );
-    setInterval(this.getInvites.bind(this), 40000);
+      );
+    }
+    if (!this.getInviteInterval) {
+      this.getInviteInterval = setInterval(this.getInvites.bind(this), 20000);
+    }
   }
 
   sideMenu() {
@@ -107,6 +113,12 @@ export class AppComponent {
         title: "Profilo",
         url: "/profile",
         icon: "game-controller",
+      },
+      {
+        title: " Inviti",
+        url: "/invites",
+        icon: "notifications",
+        notificationsCount: this.env.notificationsCounter,
       },
       {
         title: "Logout",

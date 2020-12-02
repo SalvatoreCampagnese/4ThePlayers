@@ -24,8 +24,6 @@ import { Network } from "@ionic-native/network/ngx";
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
-    //Network,
-    //FontAwesomeModule,
   ],
   providers: [
     StatusBar,
@@ -36,4 +34,4 @@ import { Network } from "@ionic-native/network/ngx";
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

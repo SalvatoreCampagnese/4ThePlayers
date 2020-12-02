@@ -19,7 +19,7 @@ export class UsersPage implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
   teamObj: any;
   token: string;
   usersList: any;
@@ -40,15 +40,20 @@ export class UsersPage implements OnInit {
         if (this.authService.isLoggedIn) {
           Storage.get({ key: "token" }).then((data) => {
             this.token = data.value;
+            const headers = new HttpHeaders({
+              Authorization: `Bearer ${this.token}`,
+            });
+            this.http
+              .get(`${this.env.baseUri}/users`, { headers })
+              .subscribe((response) => {
+                //debugger;
+                this.usersList = response['users'];
+              });
           });
         } else {
           this.router.navigateByUrl("/login");
         }
       });
-      this.usersList = [
-        { username: "test", id: "5fbd6266632de60015458b4f" },
-        { username: "test", id: "5fbd6266632de60015458b4f" },
-      ];
     });
   }
 
@@ -65,7 +70,7 @@ export class UsersPage implements OnInit {
       this.http
         .post(
           this.env.baseUri +
-            `/tournaments/${this.tournamentId}/teams/${this.teamObj._id}/invites`,
+          `/tournaments/${this.tournamentId}/teams/${this.teamObj._id}/invites`,
           dataToPost,
           { headers }
         )

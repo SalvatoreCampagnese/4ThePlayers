@@ -2,6 +2,8 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
+      <ion-badge color="danger" class="badge-notifiche" *ngIf="this.env.notificationsCounter">
+        {{this.env.notificationsCounter}}</ion-badge>
     </ion-buttons>
     <ion-title>Torneo</ion-title>
   </ion-toolbar>
@@ -10,43 +12,30 @@
 <ion-content [fullscreen]="true">
   <div id="container flex-direction-column" style="margin-bottom: 10px">
     <!-- Mostro se deve creare il team -->
-    <ion-text *ngIf="showSubscribeBox == true"
-      >Non sei ancora iscritto alla competizione.</ion-text
-    >
-    <ion-button (click)="showCreateTeamModal()" *ngIf="showSubscribeBox == true"
-      >Crea un Team</ion-button
-    >
+    <ion-text *ngIf="showSubscribeBox == true">Non sei ancora iscritto alla competizione.</ion-text>
+    <ion-button (click)="showCreateTeamModal()" *ngIf="showSubscribeBox == true">Crea un Team</ion-button>
 
     <!-- Mostro se non rispecchia il nr di membri corretto -->
-    <ion-text *ngIf="showErrorTeam == true" style="padding: 15px"
-      >Non hai un nr. adeguato di membri per pubblicare una sfida.</ion-text
-    ><br />
-    <ion-button (click)="showInviteMembers()" *ngIf="showErrorTeam == true"
-      >Invita Membri</ion-button
-    >
+    <ion-text *ngIf="showErrorTeam == true" style="padding: 15px">Non hai un nr. adeguato di membri per pubblicare una
+      sfida.</ion-text><br />
+    <ion-button (click)="showInviteMembers()" *ngIf="showErrorTeam == true">Invita Membri</ion-button>
 
     <!-- Mostro se è ok -->
     <ion-text *ngIf="showCreateMatch == true">Gioca ora!</ion-text>
-    <ion-button (click)="showCreateMatchFn()" *ngIf="showCreateMatch == true"
-      >Crea un Match</ion-button
-    >
+    <ion-button (click)="showCreateMatchFn()" *ngIf="showCreateMatch == true">Crea un Match</ion-button>
   </div>
 
   <ion-title>Classifica</ion-title>
   <ion-grid>
     <ion-row class="header">
       <ion-col size="1">#</ion-col>
-      <ion-col size="5">Nome team</ion-col>
+      <ion-col size="6">Nome team</ion-col>
       <ion-col size="2">PT</ion-col>
       <ion-col size="1">W</ion-col>
       <ion-col size="1">D</ion-col>
-      <ion-col size="2">L</ion-col>
+      <ion-col size="1">L</ion-col>
     </ion-row>
-    <ion-row
-      class="fair"
-      *ngFor="let team of teamsList, let i = index"
-      (click)="showTeamsInfo(team._id)"
-    >
+    <ion-row class="fair" *ngFor="let team of teamsList, let i = index" (click)="showTeamsInfo(team._id)">
       <ion-col size="1">{{i + 1}}</ion-col>
       <ion-col size="6">{{team && team.name}}</ion-col>
       <ion-col size="2">{{team && team.elo}}</ion-col>

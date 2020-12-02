@@ -2,6 +2,8 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
+      <ion-badge color="danger" class="badge-notifiche" *ngIf="this.env.notificationsCounter">
+        {{this.env.notificationsCounter}}</ion-badge>
     </ion-buttons>
     <ion-title> {{this.gameName}} </ion-title>
   </ion-toolbar>

@@ -6,6 +6,7 @@ import { AuthService } from "src/app/services/auth.service";
 import { Plugins } from "@capacitor/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 const { Storage } = Plugins;
+import { GlobalEnv } from "../env";
 
 @Component({
   selector: "app-signup",
@@ -22,10 +23,11 @@ export class SignupPage implements OnInit {
     private router: Router,
     private modalController: ModalController,
     private authService: AuthService,
-    private http: HttpClient
-  ) {}
+    private http: HttpClient,
+    private env: GlobalEnv
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   SignupForm() {
     this.authService
@@ -33,11 +35,10 @@ export class SignupPage implements OnInit {
       .subscribe(
         (data) => {
           if (data && data["token"]) {
-            const baseUrl = "https://just-fight.herokuapp.com";
             const headers = new HttpHeaders({
               Authorization: `Bearer ${data["token"]}`,
             });
-            this.http.get(`${baseUrl}/auth/email`, { headers }).subscribe(
+            this.http.get(`${this.env.baseUri}/auth/email`, { headers }).subscribe(
               (data) => {
                 this.showCreateTeamModal();
               },
