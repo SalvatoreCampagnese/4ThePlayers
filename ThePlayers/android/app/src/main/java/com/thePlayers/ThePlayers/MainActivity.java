@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.thePlayers.ThePlayers;
 
 import android.os.Bundle;
 

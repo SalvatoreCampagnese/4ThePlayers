@@ -7,6 +7,7 @@ import { ModalPageCreateTeamPage } from "../modal-page-create-team/modal-page-cr
 import { AuthService } from "src/app/services/auth.service";
 import { Plugins } from "@capacitor/core";
 import { GlobalEnv } from "../env";
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 const { Storage } = Plugins;
 
 @Component({
@@ -19,12 +20,16 @@ export class TournamentDetailPage implements OnInit {
   tournamentDetail: any;
 
   showSubscribeBox: boolean;
-  showErrorTeam: boolean;
-  showCreateMatch: boolean;
+  showErrorTeam: boolean = false;
+  showCreateMatch: boolean = false;
+  showMatchPending: boolean = false;
 
   teamsList: any;
   userTeam: any;
-
+  matchesList: any;
+  matchPending: any;
+  userCoins: number = 0;
+  alreadyMatched: boolean = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -87,11 +92,8 @@ export class TournamentDetailPage implements OnInit {
   }
 
   async getTournamentDetail(idTournament, token) {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
     this.http
-      .get(`${this.env.baseUri}/tournaments/${idTournament}`, { headers })
+      .get(`${this.env.baseUri}/tournaments/${idTournament}`)
       .subscribe(
         (response) => {
           this.tournamentDetail = response;
@@ -109,12 +111,11 @@ export class TournamentDetailPage implements OnInit {
               // Il team è ok e faccio fare le sfide
               this.showCreateMatch = true;
               this.showErrorTeam = false;
+              this.checkIfHasMatch(this.userTeam);
             } else {
               // Il team non rispetta il nr di giocatori necessari
               this.showErrorTeam = true;
             }
-          } else {
-            // Non ce l'ha
           }
           this.teamsList = this.tournamentDetail.teams;
           if (this.tournamentDetail.userTeam) {
@@ -129,8 +130,98 @@ export class TournamentDetailPage implements OnInit {
         }
       );
   }
+
+  checkIfHasMatch(userTeam) {
+    this.http
+      .get(`${this.env.baseUri}/tournaments/${this.idTournament}/matches`)
+      .subscribe((resp) => {
+        // Itero i matches
+        if (resp) {
+          this.matchesList = resp;
+          for (var i = 0; i < this.matchesList.length; i++) {
+            if (this.matchesList[i] && this.matchesList[i].status === "PENDING") {
+              // Ha gia' un match in corso
+              if (this.matchesList[i].teamOne === this.tournamentDetail.userTeam._id || this.matchesList[i].teamTwo === this.tournamentDetail.userTeam._id) {
+                if (this.matchesList[i].teamOne === this.tournamentDetail.userTeam._id) {
+                  if (this.matchesList[i].teamTwo) this.alreadyMatched = true; else this.alreadyMatched = false;
+                } else if (this.matchesList[i].teamTwo === this.tournamentDetail.userTeam._id) {
+                  if (this.matchesList[i].teamOne) this.alreadyMatched = true; else this.alreadyMatched = false;
+                }
+                this.showCreateMatch = false;
+                this.showMatchPending = true;
+
+                this.matchPending = this.matchesList[i];
+              }
+            }
+          }
+        }
+      },
+        (error) => {
+          window.alert(error)
+        });
+  }
+
+  deleteMatch(matchObj) {
+    if (this.tournamentDetail.userTeam._id) {
+      if (this.tournamentDetail.userTeam._id == matchObj.teamOne) {
+        if (matchObj.teamTwo) {
+          location.reload();
+          return;
+        }
+      } else if (this.tournamentDetail.userTeam._id == matchObj.teamTwo) {
+        if (matchObj.teamOne) {
+          location.reload();
+          return;
+        }
+      }
+      this.http
+        .delete(`${this.env.baseUri}/tournaments/${this.idTournament}/matches/${matchObj._id}`)
+        .subscribe((resp) => {
+          location.reload();
+        });
+    }
+    return;
+  }
+
+  changeResultMatch(matchObj, result) {
+    if (this.tournamentDetail.userTeam._id) {
+      const dataToPatch = {
+        "teamId": this.tournamentDetail.userTeam._id,
+        "action": "POST_RESULT",
+        "result": result
+      }
+      this.http
+        .patch(`${this.env.baseUri}/tournaments/${this.idTournament}/matches/${matchObj._id}`, dataToPatch)
+        .subscribe((resp) => {
+          location.reload();
+        });
+    }
+    return;
+  }
+
   showCreateMatchFn() {
+    const dataToPost = {
+      teamId: this.tournamentDetail.userTeam._id
+    }
+    this.http
+      .post(`${this.env.baseUri}/tournaments/${this.idTournament}/matches`, dataToPost)
+      .subscribe((resp) => {
+        location.reload();
+      });
     return true;
+  }
+
+  doRefresh(event) {
+    this.authService.getToken().then(() => {
+      if (this.authService.isLoggedIn) {
+        Storage.get({ key: "token" }).then((data) => {
+          location.reload();
+          event.target.complete();
+        });
+      } else {
+        this.router.navigateByUrl("/login");
+      }
+    });
   }
 
   showInviteMembers() {
@@ -148,12 +239,6 @@ export class TournamentDetailPage implements OnInit {
 
 
   async showTeamsInfo(teamId) {
-    const token = await Storage.get({ key: "token" }).then((data) => {
-      return data.value;
-    });
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
     const teamObj = this.teamsList.find((item) => item._id == teamId);
     if (teamObj) {
       this.router.navigate(["/team-detail"], {

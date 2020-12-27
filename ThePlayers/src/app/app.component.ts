@@ -74,10 +74,7 @@ export class AppComponent {
     if (token) {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken["id"];
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${token}`,
-      });
-      this.http.get(this.env.baseUri + `/users/${userId}`, { headers }).subscribe(
+      this.http.get(this.env.baseUri + `/users/${userId}`).subscribe(
         (resp) => {
           if (resp && resp["user"].invites && resp["user"].invites.length) {
             let count = 0;
@@ -98,7 +95,7 @@ export class AppComponent {
       );
     }
     if (!this.getInviteInterval) {
-      this.getInviteInterval = setInterval(this.getInvites.bind(this), 20000);
+      this.getInviteInterval = setInterval(this.getInvites.bind(this), 60000);
     }
   }
 

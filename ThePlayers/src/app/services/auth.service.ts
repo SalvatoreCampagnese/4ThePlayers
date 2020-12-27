@@ -18,7 +18,7 @@ export class AuthService {
     private http: HttpClient,
     private router: Router,
     public env: GlobalEnv
-  ) {}
+  ) { }
 
   login(email: String, password: String) {
     return this.http
@@ -55,12 +55,8 @@ export class AuthService {
     return true;
   }
   user() {
-    const headers = new HttpHeaders({
-      Authorization:
-        this.token["token_type"] + " " + this.token["access_token"],
-    });
     return this.http
-      .get<User>(this.env.baseUri + "auth/user", { headers: headers })
+      .get<User>(this.env.baseUri + "auth/user")
       .pipe(
         tap((user) => {
           return user;

@@ -15,7 +15,7 @@ export class TeamDetailPage implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private env: GlobalEnv,
+    public env: GlobalEnv,
     private http: HttpClient,
     private authService: AuthService,
     private router: Router

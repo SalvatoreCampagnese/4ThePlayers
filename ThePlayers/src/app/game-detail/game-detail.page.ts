@@ -19,6 +19,7 @@ export class GameDetailPage implements OnInit {
 
   errorText: string;
   loading: any;
+  userCoins: number = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -60,6 +61,20 @@ export class GameDetailPage implements OnInit {
     });
   }
 
+
+  doRefresh(event) {
+    this.authService.getToken().then(() => {
+      if (this.authService.isLoggedIn) {
+        Storage.get({ key: "token" }).then((data) => {
+          this.getTournaments(data.value);
+          event.target.complete();
+        });
+      } else {
+        this.router.navigateByUrl("/login");
+      }
+    });
+  }
+
   async DetailTournament(idTournament, tournamentName) {
     this.router.navigate(["/tournament-detail"], {
       queryParams: {
@@ -71,13 +86,8 @@ export class GameDetailPage implements OnInit {
 
   getTournaments(token) {
     this.presentLoading();
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
     this.http
-      .get(`${this.env.baseUri}/tournaments/?gameId=${this.idGame}`, {
-        headers,
-      })
+      .get(`${this.env.baseUri}/tournaments/?gameId=${this.idGame}`)
       .subscribe(
         (response) => {
           this.tournamentsList = response;

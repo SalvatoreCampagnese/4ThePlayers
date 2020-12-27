@@ -1,5 +1,5 @@
 <ion-content id="backgroundimage">
-  
+
   <ion-card-content>
     <ion-img class="logo" src="../../assets/img/logo.png"></ion-img>
     <form (ngSubmit)="SignupForm()">
@@ -16,10 +16,8 @@
         <ion-input type="password" [(ngModel)]="password" name="password"></ion-input>
       </ion-item>
       <ion-button class="submit-button" type="submit" block>Registrati</ion-button>
+      <ion-card-subtitle>Gi&agrave; registrato?</ion-card-subtitle>
+      <ion-card-title (click)="LoginPage()">ACCEDI!</ion-card-title>
     </form>
-  </ion-card-content>
-  <ion-card-content class="align-bottom">
-    <ion-card-subtitle>Gi&agrave; registrato?</ion-card-subtitle>
-    <ion-card-title (click)="LoginPage()">ACCEDI!</ion-card-title>
   </ion-card-content>
 </ion-content>

@@ -40,11 +40,8 @@ export class UsersPage implements OnInit {
         if (this.authService.isLoggedIn) {
           Storage.get({ key: "token" }).then((data) => {
             this.token = data.value;
-            const headers = new HttpHeaders({
-              Authorization: `Bearer ${this.token}`,
-            });
             this.http
-              .get(`${this.env.baseUri}/users`, { headers })
+              .get(`${this.env.baseUri}/users`)
               .subscribe((response) => {
                 //debugger;
                 this.usersList = response['users'];
@@ -58,9 +55,7 @@ export class UsersPage implements OnInit {
   }
 
   onInviteUser(idUser) {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
+
     const dataToPost = {
       userId: idUser,
     };
@@ -71,8 +66,7 @@ export class UsersPage implements OnInit {
         .post(
           this.env.baseUri +
           `/tournaments/${this.tournamentId}/teams/${this.teamObj._id}/invites`,
-          dataToPost,
-          { headers }
+          dataToPost
         )
         .subscribe(
           (resp) => {

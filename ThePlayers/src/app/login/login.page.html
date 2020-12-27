@@ -4,17 +4,15 @@
     <form (ngSubmit)="LoginForm()">
       <ion-item color="white">
         <ion-label><i class="fas fa-at"></i></ion-label>
-        <ion-input type="email" [(ngModel)]="email" name="email"></ion-input>
+        <ion-input clearOnEdit="false" autofocus="true" type="email" [(ngModel)]="email" name="email"></ion-input>
       </ion-item>
       <ion-item color="white">
         <ion-label><i class="fas fa-key"></i></ion-label>
-        <ion-input type="password" [(ngModel)]="password" name="password"></ion-input>
+        <ion-input clearOnEdit="false" autofocus="true" type="password" [(ngModel)]="password" name="password"></ion-input>
       </ion-item>
       <ion-button class="submit-button" type="submit">Accedi</ion-button>
+      <ion-card-subtitle>Non sei ancora registrato?</ion-card-subtitle>
+      <ion-card-title (click)="SignUpPage()">REGISTRATI!</ion-card-title>
     </form>
-  </ion-card-content>
-  <ion-card-content class="align-bottom">
-    <ion-card-subtitle>Non sei ancora registrato?</ion-card-subtitle>
-    <ion-card-title (click)="SignUpPage()">REGISTRATI!</ion-card-title>
   </ion-card-content>
 </ion-content>

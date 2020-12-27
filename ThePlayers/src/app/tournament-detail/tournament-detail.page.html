@@ -6,10 +6,16 @@
         {{this.env.notificationsCounter}}</ion-badge>
     </ion-buttons>
     <ion-title>Torneo</ion-title>
+    <ion-buttons style="padding-right: 20px;" slot="end">
+      <ion-text>{{this.userCoins}}</ion-text>&nbsp;&nbsp;<i class="fas fa-coins" color="orange"></i>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <div id="container flex-direction-column" style="margin-bottom: 10px">
     <!-- Mostro se deve creare il team -->
     <ion-text *ngIf="showSubscribeBox == true">Non sei ancora iscritto alla competizione.</ion-text>
@@ -21,8 +27,25 @@
     <ion-button (click)="showInviteMembers()" *ngIf="showErrorTeam == true">Invita Membri</ion-button>
 
     <!-- Mostro se è ok -->
-    <ion-text *ngIf="showCreateMatch == true">Gioca ora!</ion-text>
+    <ion-text *ngIf="showCreateMatch == true">Gioca ora!</ion-text><br />
     <ion-button (click)="showCreateMatchFn()" *ngIf="showCreateMatch == true">Crea un Match</ion-button>
+
+    <div *ngIf="showMatchPending === true">
+      <ion-title>Match in Corso</ion-title> <br />
+      <div *ngIf="alreadyMatched==true">
+        <ion-text>{{this.matchPending.createdAt}}</ion-text> <br />
+        {{this.matchPending.teamOne.name}} vs {{this.matchPending.teamTwo.name}} <br />
+        <ion-button (click)="changeResultMatch(this.matchPending, 'WIN')">Vinto</ion-button>
+        <ion-button (click)="changeResultMatch(this.matchPending, 'LOSS')" color="danger">Perso
+        </ion-button>
+      </div>
+
+      <div *ngIf="alreadyMatched==false">
+        <ion-text>Ricerca match in corso...</ion-text><br />
+        <ion-button (click)="deleteMatch(this.matchPending)" color="danger">Cancella
+        </ion-button>
+      </div>
+    </div>
   </div>
 
   <ion-title>Classifica</ion-title>

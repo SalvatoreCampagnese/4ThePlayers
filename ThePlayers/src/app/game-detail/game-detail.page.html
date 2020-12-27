@@ -6,10 +6,16 @@
         {{this.env.notificationsCounter}}</ion-badge>
     </ion-buttons>
     <ion-title> {{this.gameName}} </ion-title>
+    <ion-buttons style="padding-right: 20px;" slot="end" >
+      <ion-text>{{this.userCoins}}</ion-text>&nbsp;&nbsp;<i class="fas fa-coins" color="orange"></i>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Tornei</ion-title>
@@ -17,18 +23,18 @@
   </ion-header>
 
   <div id="container">
-    <strong>Tornei</strong>
-    <div>
-      <br />
-      <label>{{this.errorText}}</label>
-    </div>
+    <strong style="margin-left: 15px;">Tornei</strong>
     <ion-grid>
-      <ion-row *ngFor="let tournament of tournamentsList">
-        <ion-col (click)="DetailTournament(tournament.id, tournament.name)">
-          <div class="container-info-game">
-            <div class="titolo">{{tournament.name}}</div>
-          </div>
-          <ion-img class="logo" src="{{tournament.imgUrl}}"></ion-img>
+      <ion-row>
+        <ion-col *ngFor="let tournament of tournamentsList" size="6" (click)="DetailTournament(tournament.id, tournament.name)">
+          <ion-card color="primary" class="tournament-card" style="background-image: url({{tournament.imgUrl}});">
+            <div min-height="40px"></div>
+            <div class="tournament-info">
+              <ion-card-title>{{tournament.name}}</ion-card-title>
+              <ion-card-subtitle><i class="fab fa-playstation"></i>&nbsp;&nbsp;<i class="fab fa-xbox"></i>
+              </ion-card-subtitle>
+            </div>
+          </ion-card>
         </ion-col>
       </ion-row>
     </ion-grid>

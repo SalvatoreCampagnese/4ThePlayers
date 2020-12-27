@@ -25,30 +25,31 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,500;0,600;0,700;1,400;1,500;1,600&display=swap');
+
 //basic modal
-.simple-modal{
+.simple-modal {
     width: 100vw;
     height: 100vh;
     position: absolute;
     border-radius: 10px;
-    box-shadow: 0px 0px 10vh rgba(255,255,255,0.2)
+    box-shadow: 0px 0px 10vh rgba(255, 255, 255, 0.2)
 }
 
 //small modal
-.small-modal{
+.small-modal {
     width: 90vw;
     height: 35vh;
     position: absolute;
     top: 37vh;
     left: 5vw;
     border-radius: 10px;
-    box-shadow: 0px 0px 310vh rgba(255,255,255,1)
+    box-shadow: 0px 0px 310vh rgba(255, 255, 255, 1)
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,500;0,600;0,700;1,400;1,500;1,600&display=swap');
 
-*{
-    font-family: 'Montserrat', sans-serif; 
+* {
+    font-family: 'Montserrat', sans-serif;
 }
 
 .ion-color-white {
@@ -59,38 +60,59 @@
     --ion-color-shade: var(--ion-color-white-shade) !important;
     --ion-color-tint: var(--ion-color-white-tint) !important;
 }
-.background-primary{
+
+.background-primary {
     --background: var(--color-toolbar-background) !important;
 }
 
-.modal-container{
+.modal-container {
     width: 100vw;
     height: 100vh;
     --background: var(--ion-background-opacitylow);
 }
-.scroll-content
-{
-padding-bottom: 0 !important;
+
+.scroll-content {
+    padding-bottom: 0 !important;
 }
+
 ion-toolbar {
---color: #ffffff;
---background: #061e4e;
---box-shadow: 0px 0px 5px black;
+    --color: #ffffff;
+    --background: #061e4e;
+    --box-shadow: 0px 0px 5px black;
 }
 
 
-.badge-notifiche{
+.badge-notifiche {
     border-radius: 100%;
     width: 20px;
     height: 20px;
     position: absolute;
     left: 25px;
     top: 25px;
-  }
-  .badge-notifiche-menu{
+}
+
+.badge-notifiche-menu {
     border-radius: 100%;
     width: 20px;
     height: 20px;
     position: absolute;
     left: 50px;
-  }
+}
+
+.tournament-card {
+    min-height: 200px;
+    color: white;
+    background-size: cover;
+
+    .tournament-info {
+        width: 100%;
+        position: absolute;
+        bottom: 20px;
+        text-align: center;
+        text-shadow: 1px 1px 5px black;
+
+        ion-card-title {
+            font-size: 1.2em;
+        }
+    }
+}

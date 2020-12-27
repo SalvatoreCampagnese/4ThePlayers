@@ -10,6 +10,9 @@
 </ion-header>
 
 <ion-content style="--padding-top: 10px !important;">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-text style="margin-left: 5px">Inviti in sospeso</ion-text>
   <ion-grid style="margin-bottom: 15px">
     <ion-text *ngIf="invitesListPending.length == 0" color="danger">Non hai nessun invito.

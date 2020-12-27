@@ -40,17 +40,14 @@ export class ModalPageCreateTeamPage implements OnInit {
   }
 
   createTeamRest(token) {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
+
     const dataPost = {
       name: this.teamname,
     };
     this.http
       .post(
         `${this.env.baseUri}/tournaments/${this.idTournament}/teams`,
-        dataPost,
-        { headers }
+        dataPost
       )
       .subscribe((response) => {
         this.created = true;

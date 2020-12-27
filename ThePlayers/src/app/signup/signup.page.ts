@@ -35,17 +35,21 @@ export class SignupPage implements OnInit {
       .subscribe(
         (data) => {
           if (data && data["token"]) {
-            const headers = new HttpHeaders({
-              Authorization: `Bearer ${data["token"]}`,
-            });
-            this.http.get(`${this.env.baseUri}/auth/email`, { headers }).subscribe(
-              (data) => {
-                this.showCreateTeamModal();
-              },
-              (error) => {
-                window.alert("Errore sendEmail" + JSON.stringify(error));
-              }
-            );
+            Storage.set({
+              key: "token",
+              value: data["token"],
+            }).then(
+              () => {
+                this.http.get(`${this.env.baseUri}/auth/email`).subscribe(
+                  (data) => {
+                    Storage.remove({ key: "token" });
+                    this.showCreateTeamModal();
+                  },
+                  (error) => {
+                    window.alert("Errore sendEmail" + JSON.stringify(error));
+                  }
+                );
+              });
           }
         },
         (error) => {

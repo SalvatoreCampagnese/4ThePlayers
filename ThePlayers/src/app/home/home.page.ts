@@ -29,16 +29,15 @@ export class HomePage implements OnInit {
     public env: GlobalEnv,
     public loadingController: LoadingController,
   ) { }
-  gamesList: any;
+  gamesList: any = [];
   loading: any;
+  userCoins: number = 0;
 
   async presentLoading() {
     // Prepare a loading controller
     this.loading = await this.loadingController.create({
       message: "Caricamento dei giochi corso...",
     });
-    // Present the loading controller
-    //await this.loading.present();
   }
 
   ngOnInit() {
@@ -48,6 +47,7 @@ export class HomePage implements OnInit {
           this.getGames(data.value);
           this.menuCtrl.enable(true);
           this.router.navigateByUrl("/home");
+          this.allowNotifications();
         });
       } else {
         this.router.navigateByUrl("/login");
@@ -55,6 +55,19 @@ export class HomePage implements OnInit {
     });
   }
 
+
+  doRefresh(event) {
+    this.authService.getToken().then(() => {
+      if (this.authService.isLoggedIn) {
+        Storage.get({ key: "token" }).then((data) => {
+          this.getGames(data.value);
+          event.target.complete();
+        });
+      } else {
+        this.router.navigateByUrl("/login");
+      }
+    });
+  }
   async DetailGame(idGame, nomeGioco) {
     this.router.navigate(["/game-detail"], {
       queryParams: { idGame: idGame, gameName: nomeGioco },
@@ -63,51 +76,53 @@ export class HomePage implements OnInit {
 
   async getGames(token) {
     this.presentLoading();
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
     this.http
-      .get(`${this.env.baseUri}/games`, { headers })
+      .get(`${this.env.baseUri}/games`)
       .subscribe((response) => {
         this.gamesList = response;
       });
   }
 
-  showBuyCoins() {
+  allowNotifications() {
     PushNotifications.requestPermission().then(result => {
       if (result.granted) {
         // Register with Apple / Google to receive push via APNS/FCM
         PushNotifications.register();
       } else {
         // Show some error
+        window.alert('Errore permessi per notifiche');
       }
     });
     // On success, we should be able to receive notifications
     PushNotifications.addListener('registration',
       (token: PushNotificationToken) => {
-        alert('Push registration success, token: ' + token.value);
+        console.log('Push registration success, token: ' + token.value);
       }
     );
 
     // Some issue with our setup and push will not work
     PushNotifications.addListener('registrationError',
       (error: any) => {
-        alert('Error on registration: ' + JSON.stringify(error));
+        console.log('Error on registration: ' + JSON.stringify(error));
       }
     );
 
     // Show us the notification payload if the app is open on our device
     PushNotifications.addListener('pushNotificationReceived',
       (notification: PushNotification) => {
-        alert('Push received: ' + JSON.stringify(notification));
+        console.log('Push received: ' + JSON.stringify(notification));
       }
     );
 
     // Method called when tapping on a notification
     PushNotifications.addListener('pushNotificationActionPerformed',
       (notification: PushNotificationActionPerformed) => {
-        alert('Push action performed: ' + JSON.stringify(notification));
+        console.log('Push action performed: ' + JSON.stringify(notification));
       }
     );
+  }
+
+  showBuyCoins() {
+    // Empty
   }
 }
