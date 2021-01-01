@@ -8,14 +8,49 @@
 </ion-header>
 
 <ion-content>
-  <div class="user-detail-avatar">
-    <img src="../../assets/img/avatar-1.jpg" class="user-avatar">
-    <ion-text>{{userObj.username}}</ion-text>
-  </div>
-  <div class="teams-list-container">
-    <ion-text>Teams</ion-text>
-    <ion-grid>
+  <div class="card">
+    <div class="header">
+      <div class="avatar">
+        <img src="../../assets/img/avatar-1.jpg" alt="" />
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="user-meta ion-text-center">
+        <h3 class="playername">{{userObj.username}}</h3>
+        <h5 class="country">Nickname PS4</h5>
+        <h5 class="country">Nickname Xbox</h5>
+        <h5 class="country">Nickname Nintendo</h5>
+        <h5 class="country">Nickname PC</h5>
 
-    </ion-grid>
+        <div class="user-tournament">
+          <h2>Tornei</h2>
+          <ion-grid>
+            <ion-row>
+              <ion-col
+                *ngFor="let tournament of tournamentsList"
+                size="6"
+                (click)="DetailTournament(tournament.id, tournament.name)"
+              >
+                <ion-card
+                  color="primary"
+                  class="tournament-card"
+                  style="background-image: url({{tournament.imgUrl}});"
+                >
+                  <div min-height="40px"></div>
+                  <div class="tournament-info">
+                    <ion-card-title>{{tournament.name}}</ion-card-title>
+                    <ion-card-subtitle
+                      ><i class="fab fa-playstation"></i>&nbsp;&nbsp;<i
+                        class="fab fa-xbox"
+                      ></i>
+                    </ion-card-subtitle>
+                  </div>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </div>
+    </div>
   </div>
 </ion-content>

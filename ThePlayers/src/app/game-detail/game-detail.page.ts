@@ -28,7 +28,7 @@ export class GameDetailPage implements OnInit {
     private http: HttpClient,
     public env: GlobalEnv,
     public loadingController: LoadingController
-  ) { }
+  ) {}
   async presentLoading() {
     // Prepare a loading controller
     this.loading = await this.loadingController.create({
@@ -60,7 +60,6 @@ export class GameDetailPage implements OnInit {
       }
     });
   }
-
 
   doRefresh(event) {
     this.authService.getToken().then(() => {

@@ -2,26 +2,60 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
-      <ion-badge color="danger" class="badge-notifiche" *ngIf="this.env.notificationsCounter">
-        {{this.env.notificationsCounter}}</ion-badge>
+      <ion-badge
+        color="danger"
+        class="badge-notifiche"
+        *ngIf="this.env.notificationsCounter"
+      >
+        {{this.env.notificationsCounter}}</ion-badge
+      >
     </ion-buttons>
     <ion-title>Dettagli team</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="team-detail-avatar">
-    <img src="../../assets/img/avatar-1.jpg" class="team-avatar">
-    <ion-text>{{teamObj.name}}</ion-text>
-  </div>
-  <div class="members-list-container">
-    <ion-text>Membri</ion-text>
-    <ion-grid>
-      <ion-row *ngFor="let member of teamObj.members">
-        <ion-col (click)="showUserPage(member)" *ngIf="member.role !== 'LEADER'">{{member.username}}</ion-col>
-        <ion-col (click)="showUserPage(member)" class="leader-text" *ngIf="member.role == 'LEADER'">{{member.username}}
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+  <div class="card">
+    <div class="header">
+      <div class="avatar">
+        <img src="../../assets/img/avatar-1.jpg" alt="" />
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="user-meta ion-text-center">
+        <h3 class="playername">{{teamObj.name}}</h3>
+        <div class="user-tournament">
+          <ion-text>Membri</ion-text>
+          <ion-grid>
+            <ion-row
+              *ngFor="let member of teamObj.members"
+              class="row-align-center"
+            >
+              <ion-col (click)="showUserPage(member)">
+                <ion-card>
+                  <ion-item>
+                    <ion-avatar item-start style="border: 1px solid green">
+                      <img src="../../assets/img/avatar-1.jpg" />
+                    </ion-avatar>
+                    <div class="user-data">
+                      <h2>{{member.username}}</h2>
+                      <p *ngIf="member.role == 'LEADER'">Leader</p>
+                    </div>
+                  </ion-item>
+                </ion-card>
+              </ion-col>
+
+              <ion-button
+                *ngIf="this.isLeader && member.role != 'LEADER'"
+                color="danger"
+                (click)="removeMember(member)"
+              >
+                X
+              </ion-button>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </div>
+    </div>
   </div>
 </ion-content>

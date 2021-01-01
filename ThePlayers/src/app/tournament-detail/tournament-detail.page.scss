@@ -24,6 +24,9 @@ div#container{
     }
 }
 
+.my-team{
+    color: red !important;
+}
 ion-grid{
     background: white;
     color: #2d2d2d;
@@ -40,4 +43,35 @@ ion-row.header{
 }
 ion-col{
     text-align: left;
+}
+.winner{
+    color: green !important;
+}
+.looser{
+    color: red !important;
+}
+ion-row.border-bottom:last-child{
+    border-bottom: none !Important;
+}
+
+.border-bottom{
+    border-bottom: 1px solid #2d2d2d91;
+}
+
+.avatar{
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+    background: green;
+    &.avatar1{
+        background-image: url("https://i.imgur.com/2HZCGsX.jpeg");
+        background-size: 30px 30px;
+        background-repeat: no-repeat;
+    }
+}
+.centered{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }

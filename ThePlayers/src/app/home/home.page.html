@@ -2,12 +2,24 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
-      <ion-badge color="danger" class="badge-notifiche" *ngIf="this.env.notificationsCounter">
-        {{this.env.notificationsCounter}}</ion-badge>
+      <ion-badge
+        color="danger"
+        class="badge-notifiche"
+        *ngIf="this.env.notificationsCounter"
+      >
+        {{this.env.notificationsCounter}}</ion-badge
+      >
     </ion-buttons>
     <ion-title>Homepage</ion-title>
-    <ion-buttons style="padding-right: 20px;" slot="end" (click)="showBuyCoins()">
-      <ion-text>{{this.userCoins}}</ion-text>&nbsp;&nbsp;<i class="fas fa-coins" color="orange"></i>
+    <ion-buttons
+      style="padding-right: 20px"
+      slot="end"
+      (click)="showBuyCoins()"
+    >
+      <ion-text>{{this.userCoins}}</ion-text>&nbsp;&nbsp;<i
+        class="fas fa-coins"
+        color="orange"
+      ></i>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -23,15 +35,26 @@
   </ion-header>
 
   <div id="container">
-    <strong style="margin-left: 15px;">Giochi</strong>
+    <strong style="margin-left: 15px">Giochi</strong>
     <ion-grid>
       <ion-row>
-        <ion-col *ngFor="let game of gamesList" size="6" (click)="DetailGame(game.id, game.name)">
-          <ion-card color="primary" class="tournament-card" style="background-image: url({{game.imgUrl}});">
+        <ion-col
+          *ngFor="let game of gamesList"
+          size="6"
+          (click)="DetailGame(game.id, game.name)"
+        >
+          <ion-card
+            color="primary"
+            class="tournament-card"
+            style="background-image: url({{game.imgUrl}});"
+          >
             <div min-height="40px"></div>
             <div class="tournament-info">
               <ion-card-title>{{game.name}}</ion-card-title>
-              <ion-card-subtitle><i class="fab fa-playstation"></i>&nbsp;&nbsp;<i class="fab fa-xbox"></i>
+              <ion-card-subtitle
+                ><i class="fab fa-playstation"></i>&nbsp;&nbsp;<i
+                  class="fab fa-xbox"
+                ></i>
               </ion-card-subtitle>
             </div>
           </ion-card>

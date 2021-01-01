@@ -1,30 +1,75 @@
+.card {
+    margin: 0 auto;
 
-.team-detail-avatar{
-    width: 100%;
-    padding-top: 15px;
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    .header {
+        height: 200px; // 20vh;
 
-    .team-avatar{
-        width: 100px;
-        height: 100px;
+        .avatar {
+            width: 160px; //40vw
+            height: 160px;
+            position: relative;
+            margin: 0 auto;
 
-        border-radius: 10px;
-
-        margin-bottom: 5px;
+            img {
+                display: block;
+                border-radius: 50%;
+                position: absolute;
+                bottom: calc(-1*(80px + 4px)); // -42px;
+                border: 2px solid #095338;
+                background-color: #fff;
+            }
+        }
     }
 }
-.members-list-container{
-    margin-top: 20px;
 
-    ion-text{
-        margin-left: 10px;
-        font-size: 1.2em;
+.card-body {
+    background-color: #ffffff;
+    padding: 30px;
+    height: calc(100vh - (200px + 56px));
+    overflow: hidden;
+
+    .user-meta {
+        padding-top: 20px;
+
+        .playername {
+            font-size: 24px;
+            font-weight: 600;
+            color: #303940;
+        }
+
+        .country {
+            font-size: 90%;
+            color: #949ea6;
+            text-transform: uppercase;
+            margin: 0 auto;
+        }
     }
-    .leader-text{
-        color: red !important;
+
+    .user-tournament{
+        color: #2d2d2d;
+        h2{
+            color: #2d2d2d;
+        }
+    }
+}
+.row-align-center{
+    display: flex;
+    align-items: center;
+    
+}
+.leader-text{
+    color: red !important;
+}
+.user-data{
+    display: flex;
+    flex-direction: column;
+    padding-left: 15px;
+    h2{
+        color: white !important;
+        margin: 0px;
+    }
+    p{
+        margin: 0px;
+        color: #f2f2f2a1;
     }
 }

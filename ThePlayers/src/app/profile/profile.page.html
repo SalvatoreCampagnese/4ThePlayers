@@ -2,8 +2,13 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
-      <ion-badge color="danger" class="badge-notifiche" *ngIf="this.env.notificationsCounter">
-        {{this.env.notificationsCounter}}</ion-badge>
+      <ion-badge
+        color="danger"
+        class="badge-notifiche"
+        *ngIf="this.env.notificationsCounter"
+      >
+        {{this.env.notificationsCounter}}</ion-badge
+      >
     </ion-buttons>
     <ion-title>Profilo</ion-title>
   </ion-toolbar>
@@ -11,55 +16,78 @@
 
 <ion-content [fullscreen]="true">
   <form (ngSubmit)="editUser()">
-    <ion-text style="margin-left:10px">Dati utente</ion-text>
+    <ion-text style="margin-left: 10px">Dati utente</ion-text>
     <ion-card>
       <ion-item color="white">
         <ion-label><i class="fas fa-user"></i></ion-label>
-        <ion-input type="text" [(ngModel)]="this.userObj.username" (change)='onChangeData()' name="username"></ion-input>
+        <ion-input
+          type="text"
+          [(ngModel)]="this.userObj.username"
+          (change)="onChangeData()"
+          name="username"
+        ></ion-input>
       </ion-item>
       <ion-item color="white">
         <ion-label><i class="fas fa-at"></i></ion-label>
-        <ion-input type="email" [(ngModel)]="this.userObj.email" (change)='onChangeData()' name="email"></ion-input>
+        <ion-input
+          type="email"
+          [(ngModel)]="this.userObj.email"
+          (change)="onChangeData()"
+          name="email"
+        ></ion-input>
       </ion-item>
     </ion-card>
-    <ion-text style="margin-left:10px">Console ID</ion-text>
+    <ion-text style="margin-left: 10px">Console ID</ion-text>
     <ion-card>
-    <ion-item color="white">
-      <ion-label><i class="fab fa-playstation"></i></ion-label>
-      <ion-input type="text" [(ngModel)]="this.userObj.email" (change)='onChangeData()' name="Playstation"></ion-input>
-    </ion-item>
-
-    <ion-item color="white">
-      <ion-label><i class="fas fa-fighter-jet"></i></ion-label>
-      <ion-input type="text" [(ngModel)]="this.userObj.email" (change)='onChangeData()' name="Activision"></ion-input>
-    </ion-item>
-
-    <ion-item color="white">
-      <ion-label><i class="fab fa-xbox"></i></ion-label>
-      <ion-input type="text" [(ngModel)]="this.userObj.email" (change)='onChangeData()' name="XBox"></ion-input>
-    </ion-item>
-
-    <ion-item color="white">
-      <ion-label><i class="fab fa-steam"></i></ion-label>
-      <ion-input type="text" [(ngModel)]="this.userObj.email" (change)='onChangeData()' name="Steam"></ion-input>
-    </ion-item>
+      <ion-item color="white" *ngFor="let platform of userObj.platforms">
+        <ion-label [innerHTML]="platform.icon"></ion-label>
+        <ion-input
+          type="text"
+          id="{{platform._id}}"
+          (change)="onChangeData()"
+          value="{{platform.username}}"
+          placeholder="{{platform.name}}"
+        ></ion-input>
+      </ion-item>
     </ion-card>
 
-    <ion-text style="margin-left:10px">Password</ion-text>
+    <ion-text style="margin-left: 10px">Password</ion-text>
     <ion-card>
       <ion-item color="white">
-        <ion-label><i class="fas fa-key"></i> Password</ion-label>
-        <ion-input type="password" [(ngModel)]="this.password" (change)='onChangeData()' name="password"></ion-input>
+        <ion-label><i class="fas fa-key"></i> Password Vecchia</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="this.oldPassword"
+          (change)="onChangeData()"
+          name="password"
+        ></ion-input>
+      </ion-item>
+      <ion-item color="white">
+        <ion-label><i class="fas fa-key"></i> Nuova Password</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="this.newPassword"
+          (change)="onChangeData()"
+          name="password"
+        ></ion-input>
       </ion-item>
       <ion-item color="white">
         <ion-label><i class="fas fa-key"></i> Ripeti Password</ion-label>
-        <ion-input type="password" [(ngModel)]="this.repeatPassword" (change)='onChangeData()' name="password">
+        <ion-input
+          type="password"
+          [(ngModel)]="this.repeatPassword"
+          (change)="onChangeData()"
+          name="password"
+        >
         </ion-input>
       </ion-item>
     </ion-card>
-    <ion-button class="submit-button" type="submit" disabled="{{this.disabledAggiorna}}">
+    <ion-button
+      class="submit-button"
+      type="submit"
+      disabled="{{this.disabledAggiorna}}"
+    >
       Aggiorna
     </ion-button>
-
   </form>
 </ion-content>

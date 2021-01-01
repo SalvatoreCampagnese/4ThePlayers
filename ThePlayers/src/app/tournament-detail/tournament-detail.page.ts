@@ -7,7 +7,7 @@ import { ModalPageCreateTeamPage } from "../modal-page-create-team/modal-page-cr
 import { AuthService } from "src/app/services/auth.service";
 import { Plugins } from "@capacitor/core";
 import { GlobalEnv } from "../env";
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 const { Storage } = Plugins;
 
 @Component({
@@ -19,17 +19,26 @@ export class TournamentDetailPage implements OnInit {
   idTournament: String;
   tournamentDetail: any;
 
-  showSubscribeBox: boolean;
+  showSubscribeBox: boolean = false;
   showErrorTeam: boolean = false;
   showCreateMatch: boolean = false;
   showMatchPending: boolean = false;
+
+  showClassifica: boolean = true;
+  showRegolamento: boolean = false;
+  showSponsor: boolean = false;
+  showMatches: boolean = false;
+  isOpen: boolean = false;
+  alreadyMatched: boolean = false;
 
   teamsList: any;
   userTeam: any;
   matchesList: any;
   matchPending: any;
+
   userCoins: number = 0;
-  alreadyMatched: boolean = false;
+  counterMatchPending: number = 0;
+  counterMatchClosed: number = 0;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -38,10 +47,10 @@ export class TournamentDetailPage implements OnInit {
     private http: HttpClient,
     public env: GlobalEnv,
     public loadingController: LoadingController
-  ) { }
+  ) {}
 
   loading: any;
-
+  timeoutCheck: any = null;
   async presentLoading() {
     // Prepare a loading controller
     this.loading = await this.loadingController.create({
@@ -83,7 +92,7 @@ export class TournamentDetailPage implements OnInit {
       },
     });
     modal.onDidDismiss().then((data) => {
-      const created = data['data'].created;
+      const created = data["data"].created;
       if (created) {
         location.reload();
       }
@@ -92,73 +101,140 @@ export class TournamentDetailPage implements OnInit {
   }
 
   async getTournamentDetail(idTournament, token) {
-    this.http
-      .get(`${this.env.baseUri}/tournaments/${idTournament}`)
-      .subscribe(
-        (response) => {
-          this.tournamentDetail = response;
-          // Guardo se l'utente ha un team
-          const userTeam = this.tournamentDetail.userTeam,
-            ruleset = this.tournamentDetail.ruleset;
-          if (userTeam) {
-            this.userTeam = userTeam;
-            this.showSubscribeBox = false;
-            // Controllo il nr di players in base a quelli del torneo
-            if (
-              ruleset.maxNumberOfPlayersPerTeam <= userTeam.members.length &&
-              ruleset.minNumberOfPlayersPerTeam >= userTeam.members.length
-            ) {
-              // Il team è ok e faccio fare le sfide
-              this.showCreateMatch = true;
-              this.showErrorTeam = false;
-              this.checkIfHasMatch(this.userTeam);
-            } else {
-              // Il team non rispetta il nr di giocatori necessari
-              this.showErrorTeam = true;
-            }
+    this.http.get(`${this.env.baseUri}/tournaments/${idTournament}`).subscribe(
+      (response) => {
+        this.tournamentDetail = response;
+        // Guardo se l'utente ha un team
+        const userTeam = this.tournamentDetail.userTeam,
+          ruleset = this.tournamentDetail.ruleset;
+        if (userTeam) {
+          this.userTeam = userTeam;
+          this.showSubscribeBox = false;
+          // Controllo il nr di players in base a quelli del torneo
+          if (
+            ruleset.maxNumberOfPlayersPerTeam <= userTeam.members.length &&
+            ruleset.minNumberOfPlayersPerTeam >= userTeam.members.length
+          ) {
+            // Il team è ok e faccio fare le sfide
+            this.showCreateMatch = true;
+            this.showErrorTeam = false;
+            this.checkIfHasMatch(this.userTeam);
+          } else {
+            // Il team non rispetta il nr di giocatori necessari
+            this.showErrorTeam = true;
           }
-          this.teamsList = this.tournamentDetail.teams;
-          if (this.tournamentDetail.userTeam) {
-            this.teamsList.push(this.tournamentDetail.userTeam);
-          }
-          if (this.teamsList[0] === undefined) {
-            this.teamsList = [];
-          }
-        },
-        (error) => {
-          window.alert("errore tornei");
         }
-      );
+        this.isOpen = this.tournamentDetail.open
+          ? this.tournamentDetail.open
+          : false;
+        this.teamsList = this.tournamentDetail.teams;
+        if (this.teamsList[0] === undefined) {
+          this.teamsList = [];
+        } else {
+          this.teamsList.sort((a, b) => (a.elo < b.elo ? 1 : -1));
+        }
+      },
+      (error) => {
+        window.alert("errore tornei");
+      }
+    );
   }
 
   checkIfHasMatch(userTeam) {
     this.http
       .get(`${this.env.baseUri}/tournaments/${this.idTournament}/matches`)
-      .subscribe((resp) => {
-        // Itero i matches
-        if (resp) {
-          this.matchesList = resp;
-          for (var i = 0; i < this.matchesList.length; i++) {
-            if (this.matchesList[i] && this.matchesList[i].status === "PENDING") {
-              // Ha gia' un match in corso
-              if (this.matchesList[i].teamOne === this.tournamentDetail.userTeam._id || this.matchesList[i].teamTwo === this.tournamentDetail.userTeam._id) {
-                if (this.matchesList[i].teamOne === this.tournamentDetail.userTeam._id) {
-                  if (this.matchesList[i].teamTwo) this.alreadyMatched = true; else this.alreadyMatched = false;
-                } else if (this.matchesList[i].teamTwo === this.tournamentDetail.userTeam._id) {
-                  if (this.matchesList[i].teamOne) this.alreadyMatched = true; else this.alreadyMatched = false;
-                }
-                this.showCreateMatch = false;
-                this.showMatchPending = true;
+      .subscribe(
+        (resp) => {
+          // Itero i matches
+          if (resp) {
+            this.matchesList = resp;
 
-                this.matchPending = this.matchesList[i];
+            this.counterMatchPending = 0;
+            this.counterMatchClosed = 0;
+            for (var i = 0; i < this.matchesList.length; i++) {
+              this.matchesList[i].createdAt = new Date(
+                this.matchesList[i].createdAt
+              ).toLocaleString("it");
+              if (
+                this.matchesList[i] &&
+                this.matchesList[i].status === "PENDING"
+              ) {
+                if (
+                  this.matchesList[i].teamOne &&
+                  this.matchesList[i].teamTwo
+                ) {
+                  this.counterMatchPending += 1;
+                }
+                // Ha gia' un match in corso
+                if (
+                  (this.matchesList[i].teamOne &&
+                    this.matchesList[i].teamOne._id ===
+                      this.tournamentDetail.userTeam._id) ||
+                  (this.matchesList[i].teamTwo &&
+                    this.matchesList[i].teamTwo._id ===
+                      this.tournamentDetail.userTeam._id)
+                ) {
+                  if (
+                    this.matchesList[i].teamOne._id ===
+                    this.tournamentDetail.userTeam._id
+                  ) {
+                    if (this.matchesList[i].teamTwo) {
+                      this.alreadyMatched = true;
+                      if (!this.matchesList[i].teamOne.result) {
+                        this.showCreateMatch = false;
+                        this.showMatchPending = true;
+                      } else {
+                        this.showCreateMatch = true;
+                        this.showMatchPending = false;
+                      }
+                    } else {
+                      this.showMatchPending = true;
+                      this.showCreateMatch = false;
+                      this.alreadyMatched = false;
+                    }
+                  } else if (
+                    this.matchesList[i].teamTwo._id ===
+                    this.tournamentDetail.userTeam._id
+                  ) {
+                    if (this.matchesList[i].teamOne) {
+                      this.alreadyMatched = true;
+                      if (!this.matchesList[i].teamTwo.result) {
+                        this.showCreateMatch = false;
+                        this.showMatchPending = true;
+                      } else {
+                        this.showCreateMatch = true;
+                        this.showMatchPending = false;
+                      }
+                    } else {
+                      this.showMatchPending = true;
+                      this.showCreateMatch = false;
+                      this.alreadyMatched = false;
+                    }
+                  }
+
+                  if (this.showMatchPending) {
+                    this.matchPending = this.matchesList[i];
+                  }
+                  if (this.alreadyMatched == false) {
+                    this.autoCheckForChange(this.matchesList[i]);
+                  } else if (this.timeoutCheck) {
+                    clearInterval(this.timeoutCheck);
+                  }
+                }
+              } else if (
+                this.matchesList[i] &&
+                (this.matchesList[i].status === "TEAM1" ||
+                  this.matchesList[i].status === "TEAM2")
+              ) {
+                this.counterMatchClosed += 1;
               }
             }
           }
-        }
-      },
+        },
         (error) => {
-          window.alert(error)
-        });
+          window.alert(error);
+        }
+      );
   }
 
   deleteMatch(matchObj) {
@@ -175,7 +251,9 @@ export class TournamentDetailPage implements OnInit {
         }
       }
       this.http
-        .delete(`${this.env.baseUri}/tournaments/${this.idTournament}/matches/${matchObj._id}`)
+        .delete(
+          `${this.env.baseUri}/tournaments/${this.idTournament}/matches/${matchObj._id}`
+        )
         .subscribe((resp) => {
           location.reload();
         });
@@ -186,12 +264,15 @@ export class TournamentDetailPage implements OnInit {
   changeResultMatch(matchObj, result) {
     if (this.tournamentDetail.userTeam._id) {
       const dataToPatch = {
-        "teamId": this.tournamentDetail.userTeam._id,
-        "action": "POST_RESULT",
-        "result": result
-      }
+        teamId: this.tournamentDetail.userTeam._id,
+        action: "POST_RESULT",
+        result: result,
+      };
       this.http
-        .patch(`${this.env.baseUri}/tournaments/${this.idTournament}/matches/${matchObj._id}`, dataToPatch)
+        .patch(
+          `${this.env.baseUri}/tournaments/${this.idTournament}/matches/${matchObj._id}`,
+          dataToPatch
+        )
         .subscribe((resp) => {
           location.reload();
         });
@@ -201,10 +282,13 @@ export class TournamentDetailPage implements OnInit {
 
   showCreateMatchFn() {
     const dataToPost = {
-      teamId: this.tournamentDetail.userTeam._id
-    }
+      teamId: this.tournamentDetail.userTeam._id,
+    };
     this.http
-      .post(`${this.env.baseUri}/tournaments/${this.idTournament}/matches`, dataToPost)
+      .post(
+        `${this.env.baseUri}/tournaments/${this.idTournament}/matches`,
+        dataToPost
+      )
       .subscribe((resp) => {
         location.reload();
       });
@@ -237,15 +321,72 @@ export class TournamentDetailPage implements OnInit {
     }
   }
 
-
   async showTeamsInfo(teamId) {
     const teamObj = this.teamsList.find((item) => item._id == teamId);
     if (teamObj) {
       this.router.navigate(["/team-detail"], {
         queryParams: {
           teamObj: JSON.stringify(teamObj),
+          tournamentId: this.idTournament,
         },
       });
     }
+  }
+
+  onTabChange(ev: any) {
+    switch (ev.detail.value) {
+      case "regolamento":
+        this.showRegolamento = true;
+        this.showClassifica = false;
+        this.showSponsor = false;
+        this.showMatches = false;
+        break;
+      case "classifica":
+        this.showRegolamento = false;
+        this.showClassifica = true;
+        this.showSponsor = false;
+        this.showMatches = false;
+        break;
+      case "sponsor":
+        this.showRegolamento = false;
+        this.showClassifica = false;
+        this.showSponsor = true;
+        this.showMatches = false;
+        break;
+      case "matches":
+        this.showRegolamento = false;
+        this.showClassifica = false;
+        this.showSponsor = false;
+        this.showMatches = true;
+        break;
+      default:
+        this.showRegolamento = false;
+        this.showClassifica = true;
+        this.showSponsor = false;
+        this.showMatches = false;
+        break;
+    }
+  }
+
+  autoCheckForChange(matchObj) {
+    if (matchObj) {
+      console.log(
+        new Date().toLocaleString("it") + " - Match check ID:" + matchObj._id
+      );
+      this.http
+        .get(
+          `${this.env.baseUri}/tournaments/${this.idTournament}/matches/${matchObj._id}`
+        )
+        .subscribe((resp) => {
+          if (resp["teamTwo"]) {
+            location.reload();
+          }
+        });
+    }
+    this.timeoutCheck = setTimeout(
+      this.autoCheckForChange.bind(this),
+      15000,
+      matchObj
+    );
   }
 }

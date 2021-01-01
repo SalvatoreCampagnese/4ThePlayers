@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { Routes, RouterModule } from "@angular/router";
 
-import { TournamentDetailPage } from './tournament-detail.page';
+import { TournamentDetailPage } from "./tournament-detail.page";
 
 const routes: Routes = [
   {
-    path: '',
-    component: TournamentDetailPage
-  }
+    path: "",
+    component: TournamentDetailPage,
+  },
 ];
 
 @NgModule({

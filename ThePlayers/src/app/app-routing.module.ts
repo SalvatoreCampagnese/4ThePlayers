@@ -66,17 +66,32 @@ const routes: Routes = [
     path: "users",
     loadChildren: () =>
       import("./users/users.module").then((m) => m.UsersPageModule),
+  },
+  {
+    path: "team-detail",
+    loadChildren: () =>
+      import("./team-detail/team-detail.module").then(
+        (m) => m.TeamDetailPageModule
+      ),
+  },
+  {
+    path: "user-detail",
+    loadChildren: () =>
+      import("./user-detail/user-detail.module").then(
+        (m) => m.UserDetailPageModule
+      ),
+  },
+  {
+    path: "invites",
+    loadChildren: () =>
+      import("./invites/invites.module").then((m) => m.InvitesPageModule),
   },  {
-    path: 'team-detail',
-    loadChildren: () => import('./team-detail/team-detail.module').then( m => m.TeamDetailPageModule)
+    path: 'forgot-password',
+    loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
   },
   {
-    path: 'user-detail',
-    loadChildren: () => import('./user-detail/user-detail.module').then( m => m.UserDetailPageModule)
-  },
-  {
-    path: 'invites',
-    loadChildren: () => import('./invites/invites.module').then( m => m.InvitesPageModule)
+    path: 'reset-password',
+    loadChildren: () => import('./reset-password/reset-password.module').then( m => m.ResetPasswordPageModule)
   },
 
 ];

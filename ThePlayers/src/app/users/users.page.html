@@ -10,7 +10,8 @@
 <ion-content style="--padding: 5px !important">
   <ion-item color="white">
     <ion-label><i class="fas fa-search"></i></ion-label>
-    <ion-input placeholder="Ricerca..."> </ion-input>
+    <ion-input placeholder="Ricerca..."></ion-input>
+    <ion-button (click)="searchUser()">Ricerca</ion-button>
   </ion-item>
   <br />
   <ion-text>
@@ -20,7 +21,9 @@
     <ion-row *ngFor="let user of usersList">
       <ion-col size="10">{{user.username}}</ion-col>
       <ion-col *ngIf="showButtonInvite" size="2">
-        <ion-button (click)="onInviteUser(user._id)"><i class="fas fa-plus"></i></ion-button>
+        <ion-button (click)="onInviteUser(user._id)"
+          ><i class="fas fa-plus"></i
+        ></ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -19,12 +19,13 @@ export class UsersPage implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {}
   teamObj: any;
   token: string;
   usersList: any;
   tournamentId: any;
   showButtonInvite: boolean = true;
+  searchValue: string = null;
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -40,12 +41,9 @@ export class UsersPage implements OnInit {
         if (this.authService.isLoggedIn) {
           Storage.get({ key: "token" }).then((data) => {
             this.token = data.value;
-            this.http
-              .get(`${this.env.baseUri}/users`)
-              .subscribe((response) => {
-                //debugger;
-                this.usersList = response['users'];
-              });
+            this.http.get(`${this.env.baseUri}/users`).subscribe((response) => {
+              this.usersList = response;
+            });
           });
         } else {
           this.router.navigateByUrl("/login");
@@ -55,7 +53,6 @@ export class UsersPage implements OnInit {
   }
 
   onInviteUser(idUser) {
-
     const dataToPost = {
       userId: idUser,
     };
@@ -65,7 +62,7 @@ export class UsersPage implements OnInit {
       this.http
         .post(
           this.env.baseUri +
-          `/tournaments/${this.tournamentId}/teams/${this.teamObj._id}/invites`,
+            `/tournaments/${this.tournamentId}/teams/${this.teamObj._id}/invites`,
           dataToPost
         )
         .subscribe(
@@ -79,5 +76,8 @@ export class UsersPage implements OnInit {
     } else {
       return;
     }
+  }
+  searchUser() {
+    //
   }
 }

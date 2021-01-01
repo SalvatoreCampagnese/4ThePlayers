@@ -17,15 +17,17 @@ export class ModalPageCreateTeamPage implements OnInit {
   teamname: string;
   avatarId: String;
   created: Boolean;
+  selectedAvatar: number = 1;
+
   constructor(
     private modalController: ModalController,
     private authService: AuthService,
     private http: HttpClient,
     private router: Router,
     public env: GlobalEnv
-  ) { }
+  ) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   CreateTeam() {
     this.authService.getToken().then(() => {
@@ -40,9 +42,27 @@ export class ModalPageCreateTeamPage implements OnInit {
   }
 
   createTeamRest(token) {
-
+    let urlImg;
+    switch (this.selectedAvatar) {
+      case 1:
+        urlImg = "https://i.imgur.com/2HZCGsX.jpeg";
+        break;
+      case 2:
+        urlImg = "https://i.imgur.com/2HZCGsX.jpeg";
+        break;
+      case 3:
+        urlImg = "https://i.imgur.com/2HZCGsX.jpeg";
+        break;
+      case 4:
+        urlImg = "https://i.imgur.com/2HZCGsX.jpeg";
+        break;
+      default:
+        urlImg = "https://i.imgur.com/2HZCGsX.jpeg";
+        break;
+    }
     const dataPost = {
       name: this.teamname,
+      imgUrl: urlImg,
     };
     this.http
       .post(
@@ -62,5 +82,17 @@ export class ModalPageCreateTeamPage implements OnInit {
       dismissed: true,
       created: this.created,
     });
+  }
+  setAvatarSelected(imageId) {
+    if (imageId) {
+      let element;
+      if (this.selectedAvatar) {
+        element = document.getElementById("avatar" + this.selectedAvatar);
+        element.classList.remove("selectedavatar");
+      }
+      this.selectedAvatar = imageId;
+      element = document.getElementById("avatar" + imageId);
+      element.classList.add("selectedavatar");
+    }
   }
 }
