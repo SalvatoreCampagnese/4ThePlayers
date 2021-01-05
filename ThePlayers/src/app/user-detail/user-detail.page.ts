@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { GlobalEnv } from "../env";
 import { AuthService } from "../services/auth.service";
 import { Plugins } from "@capacitor/core";
+import jwtDecode from "jwt-decode";
 const { Storage } = Plugins;
 @Component({
   selector: "app-user-detail",
@@ -20,24 +21,28 @@ export class UserDetailPage implements OnInit {
   ) {}
   userObj: any;
   tournamentsList: any = [];
+  userId: string = null;
   token: string;
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
-      if (params["userObj"]) {
-        this.userObj = JSON.parse(params["userObj"]);
-        this.authService.getToken().then(() => {
-          if (this.authService.isLoggedIn) {
-            Storage.get({ key: "token" }).then((data) => {
-              this.token = data.value;
-              this.showInfo();
-            });
-          } else {
-            this.router.navigateByUrl("/login");
-          }
-        });
-      } else {
-        this.router.navigateByUrl("/home");
-      }
+      this.authService.getToken().then(() => {
+        if (this.authService.isLoggedIn) {
+          Storage.get({ key: "token" }).then((data) => {
+            this.token = data.value;
+            if (!params["userObj"]) {
+              this.userObj = {};
+              const deserialized = jwtDecode(this.token);
+              this.userId = deserialized["id"];
+              this.userObj["userId"] = deserialized["id"];
+            } else {
+              this.userObj = JSON.parse(params["userObj"]);
+            }
+            this.showInfo();
+          });
+        } else {
+          this.router.navigateByUrl("/login");
+        }
+      });
     });
   }
 
@@ -59,5 +64,15 @@ export class UserDetailPage implements OnInit {
       }
     }
   }
-  DetailTournament(idTournament, tournamentName) {}
+  DetailTournament(idTournament, tournamentName) {
+    this.router.navigate(["/tournament-detail"], {
+      queryParams: {
+        idTournament: idTournament,
+        tournamentName: tournamentName,
+      },
+    });
+  }
+  editProfile() {
+    this.router.navigateByUrl("/edit-profile");
+  }
 }

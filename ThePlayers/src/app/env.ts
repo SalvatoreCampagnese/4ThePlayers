@@ -6,4 +6,5 @@ import { Injectable } from "@angular/core";
 export class GlobalEnv {
   public baseUri: string = "https://for-the-players.herokuapp.com";
   public notificationsCounter = null;
+  public isLoading: boolean = false;
 }

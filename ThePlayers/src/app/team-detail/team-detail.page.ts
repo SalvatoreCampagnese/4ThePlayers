@@ -21,24 +21,19 @@ export class TeamDetailPage implements OnInit {
     private router: Router
   ) {}
 
-  teamObj: any;
+  teamId: any;
   isLeader: boolean = false;
   token: string;
   tournamentId: string;
+  teamObj: any;
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
-      if (params["teamObj"] && params["tournamentId"]) {
-        if (params["tournamentId"]) this.tournamentId = params["tournamentId"];
-        this.teamObj = JSON.parse(params["teamObj"]);
-        this.authService.getToken().then(() => {
-          if (this.authService.isLoggedIn) {
-            Storage.get({ key: "token" }).then((data) => {
-              this.token = data.value;
-              this.getTeamInfo();
-            });
-          } else {
-            this.router.navigateByUrl("/login");
-          }
+      if (params["teamId"] && params["tournamentId"]) {
+        this.tournamentId = params["tournamentId"];
+        this.teamId = params["teamId"];
+        Storage.get({ key: "token" }).then((data) => {
+          this.token = data.value;
+          this.getTeamInfo();
         });
       } else {
         this.router.navigateByUrl("/home");
@@ -46,15 +41,16 @@ export class TeamDetailPage implements OnInit {
     });
   }
   getTeamInfo() {
-    if (this.teamObj) {
+    if (this.teamId) {
       this.http
         .get(
           this.env.baseUri +
-            `/tournaments/${this.tournamentId}/teams/${this.teamObj._id}`
+            `/tournaments/${this.tournamentId}/teams/${this.teamId}`
         )
         .subscribe((resp) => {
-          for (var i = 0; i < this.teamObj.members.length; i++) {
-            const member = this.teamObj.members[i];
+          this.teamObj = resp;
+          for (var i = 0; i < resp["members"].length; i++) {
+            const member = resp["members"][i];
             if (member.userId) {
               this.http
                 .get(`${this.env.baseUri}/users/${member.userId}`)
@@ -94,7 +90,7 @@ export class TeamDetailPage implements OnInit {
         this.http
           .patch(
             this.env.baseUri +
-              `/tournaments/${this.tournamentId}/teams/${this.teamObj._id}`,
+              `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
             { membersToRemove: [userId] }
           )
           .subscribe(

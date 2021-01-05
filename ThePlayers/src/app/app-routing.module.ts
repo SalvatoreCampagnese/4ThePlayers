@@ -58,9 +58,11 @@ const routes: Routes = [
       ),
   },
   {
-    path: "profile",
+    path: "edit-profile",
     loadChildren: () =>
-      import("./profile/profile.module").then((m) => m.ProfilePageModule),
+      import("./edit-profile/edit-profile.module").then(
+        (m) => m.ProfilePageModule
+      ),
   },
   {
     path: "users",
@@ -85,15 +87,21 @@ const routes: Routes = [
     path: "invites",
     loadChildren: () =>
       import("./invites/invites.module").then((m) => m.InvitesPageModule),
-  },  {
-    path: 'forgot-password',
-    loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
   },
   {
-    path: 'reset-password',
-    loadChildren: () => import('./reset-password/reset-password.module').then( m => m.ResetPasswordPageModule)
+    path: "forgot-password",
+    loadChildren: () =>
+      import("./forgot-password/forgot-password.module").then(
+        (m) => m.ForgotPasswordPageModule
+      ),
   },
-
+  {
+    path: "reset-password",
+    loadChildren: () =>
+      import("./reset-password/reset-password.module").then(
+        (m) => m.ResetPasswordPageModule
+      ),
+  },
 ];
 
 @NgModule({

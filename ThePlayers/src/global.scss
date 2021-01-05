@@ -116,3 +116,19 @@ ion-toolbar {
         }
     }
 }
+
+.loading-wrapper{
+    width: 100vw;
+    height: 100vh;
+
+    position: absolute;
+    z-index: 9999;
+    
+    background: rgba(0,0,0,0.5);
+    color: white !important;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

@@ -15,18 +15,18 @@
 </ion-header>
 
 <ion-content>
-  <div class="card">
-    <div class="header">
-      <div class="avatar">
-        <img src="../../assets/img/avatar-1.jpg" alt="" />
+  <div class="card" style="z-index: 11">
+    <div class="header" style="z-index: 12">
+      <div class="avatar" style="z-index: 13">
+        <img style="z-index: 14" src="../../assets/img/avatar-1.jpg" alt="" />
       </div>
     </div>
-    <div class="card-body">
+    <div class="card-body" style="overflow-y: scroll !important; z-index: 10">
       <div class="user-meta ion-text-center">
-        <h3 class="playername">{{teamObj.name}}</h3>
+        <h3 class="playername">{{teamObj && teamObj.name}}</h3>
         <div class="user-tournament">
           <ion-text>Membri</ion-text>
-          <ion-grid>
+          <ion-grid *ngIf="teamObj">
             <ion-row
               *ngFor="let member of teamObj.members"
               class="row-align-center"

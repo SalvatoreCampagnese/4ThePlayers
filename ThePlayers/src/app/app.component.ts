@@ -23,7 +23,7 @@ export class AppComponent {
   notifications: any;
   token: string;
   getInviteInterval: any;
-
+  userId: string = null;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -31,7 +31,7 @@ export class AppComponent {
     private network: Network,
     private http: HttpClient,
     private authService: AuthService,
-    private env: GlobalEnv
+    public env: GlobalEnv
   ) {
     this.sideMenu();
     this.initializeApp();
@@ -74,6 +74,7 @@ export class AppComponent {
     if (token) {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken["id"];
+      this.userId = userId;
       this.http.get(this.env.baseUri + `/users/${userId}`).subscribe(
         (resp) => {
           if (resp && resp["user"].invites && resp["user"].invites.length) {
@@ -108,7 +109,7 @@ export class AppComponent {
       },
       {
         title: "Profilo",
-        url: "/profile",
+        url: "/user-detail",
         icon: "game-controller",
       },
       {

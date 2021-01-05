@@ -28,5 +28,11 @@
       </div>
     </ion-content>
   </ion-menu>
-  <ion-router-outlet id="content1"></ion-router-outlet>
+  <ion-router-outlet id="content1">
+    <div class="loading-wrapper" *ngIf="this.env.isLoading">
+      <ion-spinner name="dots"></ion-spinner>
+      <br />
+      Caricamento in corso...
+    </div>
+  </ion-router-outlet>
 </ion-app>

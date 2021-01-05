@@ -30,6 +30,7 @@ export class ModalPageCreateTeamPage implements OnInit {
   ngOnInit() {}
 
   CreateTeam() {
+    this.env.isLoading = true;
     this.authService.getToken().then(() => {
       if (this.authService.isLoggedIn) {
         Storage.get({ key: "token" }).then((data) => {
@@ -71,6 +72,7 @@ export class ModalPageCreateTeamPage implements OnInit {
       )
       .subscribe((response) => {
         this.created = true;
+        this.env.isLoading = false;
         this.dismiss();
       });
   }

@@ -65,6 +65,8 @@ export class TournamentDetailPage implements OnInit {
     this.showErrorTeam = false;
     this.showCreateMatch = false;
 
+    this.env.isLoading = true;
+
     this.activatedRoute.queryParams.subscribe((params) => {
       this.idTournament = params["idTournament"];
       if (!this.idTournament) {
@@ -112,8 +114,8 @@ export class TournamentDetailPage implements OnInit {
           this.showSubscribeBox = false;
           // Controllo il nr di players in base a quelli del torneo
           if (
-            ruleset.maxNumberOfPlayersPerTeam <= userTeam.members.length &&
-            ruleset.minNumberOfPlayersPerTeam >= userTeam.members.length
+            ruleset.maxNumberOfPlayersPerTeam >= userTeam.members.length &&
+            ruleset.minNumberOfPlayersPerTeam <= userTeam.members.length
           ) {
             // Il team è ok e faccio fare le sfide
             this.showCreateMatch = true;
@@ -133,8 +135,11 @@ export class TournamentDetailPage implements OnInit {
         } else {
           this.teamsList.sort((a, b) => (a.elo < b.elo ? 1 : -1));
         }
+
+        this.env.isLoading = false;
       },
       (error) => {
+        this.env.isLoading = false;
         window.alert("errore tornei");
       }
     );
@@ -232,6 +237,7 @@ export class TournamentDetailPage implements OnInit {
           }
         },
         (error) => {
+          this.env.isLoading = false;
           window.alert(error);
         }
       );
@@ -312,7 +318,7 @@ export class TournamentDetailPage implements OnInit {
     if (this.userTeam) {
       this.router.navigate(["/users"], {
         queryParams: {
-          teamObj: JSON.stringify(this.userTeam),
+          teamId: this.userTeam._id,
           tournamentId: this.idTournament,
         },
       });
@@ -322,11 +328,10 @@ export class TournamentDetailPage implements OnInit {
   }
 
   async showTeamsInfo(teamId) {
-    const teamObj = this.teamsList.find((item) => item._id == teamId);
-    if (teamObj) {
+    if (teamId) {
       this.router.navigate(["/team-detail"], {
         queryParams: {
-          teamObj: JSON.stringify(teamObj),
+          teamId: teamId,
           tournamentId: this.idTournament,
         },
       });
@@ -379,7 +384,14 @@ export class TournamentDetailPage implements OnInit {
         )
         .subscribe((resp) => {
           if (resp["teamTwo"]) {
-            location.reload();
+            if (location.pathname === "/tournament-detail") {
+              location.reload();
+            } else {
+              window.alert(
+                "Il team " + resp["teamTwo"].name + " ti ha accettato la sfida!"
+              );
+            }
+            clearInterval(this.timeoutCheck);
           }
         });
     }

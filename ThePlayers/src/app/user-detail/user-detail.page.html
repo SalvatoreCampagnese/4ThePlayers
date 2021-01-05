@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content scrollable="true">
   <div class="card">
     <div class="header">
       <div class="avatar">
@@ -16,11 +16,17 @@
     </div>
     <div class="card-body">
       <div class="user-meta ion-text-center">
-        <h3 class="playername">{{userObj.username}}</h3>
-        <h5 class="country">Nickname PS4</h5>
-        <h5 class="country">Nickname Xbox</h5>
-        <h5 class="country">Nickname Nintendo</h5>
-        <h5 class="country">Nickname PC</h5>
+        <h3 class="playername">
+          {{userObj && userObj.username}}<br />
+          <ion-button color="success" (click)="editProfile()"
+            ><i class="fas fa-pen"></i>&nbsp;Modifica</ion-button
+          >
+        </h3>
+        <div *ngIf="userObj">
+          <div class="country" *ngFor="let plat of userObj.platforms">
+            <h5 class="country">{{plat.username}}</h5>
+          </div>
+        </div>
 
         <div class="user-tournament">
           <h2>Tornei</h2>
@@ -29,7 +35,7 @@
               <ion-col
                 *ngFor="let tournament of tournamentsList"
                 size="6"
-                (click)="DetailTournament(tournament.id, tournament.name)"
+                (click)="DetailTournament(tournament._id, tournament.name)"
               >
                 <ion-card
                   color="primary"

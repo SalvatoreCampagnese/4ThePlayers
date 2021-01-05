@@ -9,8 +9,8 @@ import jwtDecode from "jwt-decode";
 const { Storage } = Plugins;
 @Component({
   selector: "app-profile",
-  templateUrl: "./profile.page.html",
-  styleUrls: ["./profile.page.scss"],
+  templateUrl: "./edit-profile.page.html",
+  styleUrls: ["./edit-profile.page.scss"],
 })
 export class ProfilePage implements OnInit {
   userObj: any = {};
