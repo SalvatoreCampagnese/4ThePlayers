@@ -113,7 +113,6 @@ export class ProfilePage implements OnInit {
   }
 
   updateUserPlatformData() {
-    debugger;
     if (this.platformList && this.userObj.platforms) {
       for (let i = 0; i < this.platformList.length; i++) {
         let found = false;

@@ -75,3 +75,31 @@ ion-row.border-bottom:last-child{
     align-items: center;
     flex-direction: column;
 }
+
+.create-match-container{
+    width: 100%;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    .create-match-modal{
+        background: #2d2d2d;
+        min-width: 90vw;
+        padding: 15px 30px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.7);
+    }
+}
+
+.vertical-center{
+    ion-col{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

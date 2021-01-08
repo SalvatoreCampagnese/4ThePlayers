@@ -46,10 +46,10 @@ export class ModalPageCreateTeamPage implements OnInit {
     let urlImg;
     switch (this.selectedAvatar) {
       case 1:
-        urlImg = "https://i.imgur.com/2HZCGsX.jpeg";
+        urlImg = "https://i.imgur.com/test12.jpeg";
         break;
       case 2:
-        urlImg = "https://i.imgur.com/2HZCGsX.jpeg";
+        urlImg = "https://i.imgur.com/test123.jpeg";
         break;
       case 3:
         urlImg = "https://i.imgur.com/2HZCGsX.jpeg";

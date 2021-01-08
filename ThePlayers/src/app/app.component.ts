@@ -12,6 +12,7 @@ const { Storage } = Plugins;
 import { AuthService } from "src/app/services/auth.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import jwtDecode from "jwt-decode";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-root",
@@ -29,6 +30,7 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private network: Network,
+    private router: Router,
     private http: HttpClient,
     private authService: AuthService,
     public env: GlobalEnv
@@ -88,7 +90,6 @@ export class AppComponent {
           } else {
             this.env.notificationsCounter = 0;
           }
-          this.sideMenu();
         },
         (error) => {
           // Empty
@@ -124,5 +125,9 @@ export class AppComponent {
         icon: "exit",
       },
     ];
+  }
+
+  openTicket() {
+    this.router.navigateByUrl("/ticket");
   }
 }

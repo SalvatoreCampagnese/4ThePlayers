@@ -22,6 +22,7 @@ export class TeamDetailPage implements OnInit {
   ) {}
 
   teamId: any;
+  userId: string;
   isLeader: boolean = false;
   token: string;
   tournamentId: string;
@@ -52,22 +53,13 @@ export class TeamDetailPage implements OnInit {
           for (var i = 0; i < resp["members"].length; i++) {
             const member = resp["members"][i];
             if (member.userId) {
-              this.http
-                .get(`${this.env.baseUri}/users/${member.userId}`)
-                .subscribe((response) => {
-                  if (response) {
-                    const userObj = response["user"];
-                    if (userObj) {
-                      const decodedToken = jwtDecode(this.token);
-                      if (
-                        userObj._id === decodedToken["id"] &&
-                        member.role === "LEADER"
-                      )
-                        this.isLeader = true;
-                      member.username = userObj.username;
-                    }
-                  }
-                });
+              const decodedToken = jwtDecode(this.token);
+              this.userId = decodedToken["id"];
+              if (
+                member.userId === decodedToken["id"] &&
+                member.role === "LEADER"
+              )
+                this.isLeader = true;
             }
           }
         });
@@ -102,6 +94,25 @@ export class TeamDetailPage implements OnInit {
             }
           );
       }
+    }
+  }
+
+  quitTeam() {
+    if (this.userId) {
+      this.http
+        .patch(
+          this.env.baseUri +
+            `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
+          { membersToRemove: [this.userId] }
+        )
+        .subscribe(
+          (resp) => {
+            location.reload();
+          },
+          (error) => {
+            window.alert("errore nella rimozione del player.");
+          }
+        );
     }
   }
 }

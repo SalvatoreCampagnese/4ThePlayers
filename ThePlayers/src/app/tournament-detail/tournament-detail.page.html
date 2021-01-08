@@ -80,6 +80,12 @@
                 >{{this.matchPending.createdAt}}</ion-col
               >
               <ion-col
+                size="12"
+                class="ion-text-center"
+                style="font-size: 0.8em; font-style: italic"
+                >Regolamento: {{this.matchPending.rulesetName}}</ion-col
+              >
+              <ion-col
                 *ngFor="let item of [].constructor(matchPending.maps.length); let i = index"
                 size="4"
                 class="ion-text-center"
@@ -262,5 +268,89 @@
     style="overflow-y: scroll !important; margin-top: 15px"
   >
     <img src="../../assets/img/hydralogo.png" />
+  </div>
+
+  <div class="create-match-container" *ngIf="showModalCreateMatch">
+    <div class="create-match-modal">
+      <br />
+      <ion-title>Crea Match</ion-title>
+      <ion-grid
+        *ngIf="matchesNotAccepted.length > 0"
+        style="max-width: 100%"
+        class="vertical-center"
+      >
+        <ion-row
+          size="12"
+          *ngFor="let matchNotAccepted of matchesNotAccepted"
+          style="margin-bottom: 2px"
+        >
+          <ion-col size="1"
+            ><i
+              class="fas fa-angle-up"
+              style="color: red"
+              *ngIf="this.tournamentDetail.userTeam.elo <= matchNotAccepted.teamOne.elo"
+            ></i
+            ><i
+              class="fas fa-angle-down"
+              style="color: green"
+              *ngIf="this.tournamentDetail.userTeam.elo > matchNotAccepted.teamOne.elo"
+            ></i
+          ></ion-col>
+          <ion-col size="3"
+            >{{matchNotAccepted.numberOfPlayers}} vs
+            {{matchNotAccepted.numberOfPlayers}}</ion-col
+          >
+          <ion-col size="6">{{matchNotAccepted.rulesetName}}</ion-col>
+          <ion-col size="2"
+            ><ion-button color="success" (click)="acceptMatch(matchNotAccepted)"
+              ><i class="fas fa-check"></i></ion-button
+          ></ion-col>
+        </ion-row>
+      </ion-grid>
+      <br />
+      <form (submit)="createMatchFn()">
+        <ion-text><i class="fas fa-align-left"></i> Regolamento</ion-text>
+        <br /><br />
+        <ion-text color="danger" *ngIf="showErrorRuleset"
+          >Seleziona un regolamento...</ion-text
+        >
+        <ion-select
+          [(ngModel)]="matchForm.ruleset"
+          name="ruleset"
+          hasError="showErrorRuleset"
+          placeholder="Seleziona un regolamento..."
+          interface="popover"
+          required
+        >
+          <ion-select-option
+            [value]="ruleset._id"
+            *ngFor="let ruleset of tournamentDetail.ruleset"
+            >{{ruleset.name}}</ion-select-option
+          >
+        </ion-select>
+        <br /><br />
+        <ion-text><i class="fas fa-users"></i> Numero players</ion-text>
+        <br /><br />
+        <ion-text color="danger" *ngIf="showErrorNrPlayers"
+          >Seleziona un nr di players...</ion-text
+        >
+        <ion-select
+          [(ngModel)]="matchForm.nrPlayers"
+          name="nrPlayers"
+          hasError="showErrorNrPlayers"
+          interface="popover"
+          placeholder="Seleziona il nr. di players..."
+          required
+        >
+          <ion-select-option value="4">4vs4</ion-select-option>
+          <ion-select-option value="5">5vs5</ion-select-option>
+        </ion-select>
+        <br />
+        <ion-button color="success" type="submit">Crea Match</ion-button>
+        <ion-button color="danger" (click)="closeCreateMatch()"
+          >Chiudi</ion-button
+        >
+      </form>
+    </div>
   </div>
 </ion-content>

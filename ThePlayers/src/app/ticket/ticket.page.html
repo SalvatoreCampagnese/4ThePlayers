@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Nuovo ticket</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form style="padding: 10px" (ngSubmit)="createTicket()">
+    <ion-item color="white">
+      <ion-label><i class="fas fa-pen"></i></ion-label>
+      <ion-input
+        type="text"
+        [(ngModel)]="subject"
+        name="subject"
+        placeholder="Oggetto..."
+      ></ion-input>
+    </ion-item>
+    <br />
+    <ion-item color="white">
+      <ion-label><i class="fas fa-align-left"></i></ion-label>
+      <ion-textarea
+        type="text"
+        rows="4"
+        [(ngModel)]="description"
+        name="description"
+        placeholder="Descrizione..."
+      ></ion-textarea>
+    </ion-item>
+    <br />
+    <ion-select
+      color="white"
+      type="text"
+      [(ngModel)]="category"
+      name="category"
+      placeholder="Categoria..."
+      style="width: 100%; min-height: 50px"
+    >
+      <ion-select-option value="general">Generale</ion-select-option>
+      <ion-select-option value="payment">Pagamento/Ordine</ion-select-option>
+    </ion-select>
+    <br />
+    <br />
+    <ion-text>Allegati</ion-text>
+    <ion-grid>
+      <ion-row
+        *ngFor="let attachment of this.attachments; let i = index"
+        style="margin-bottom: 5px"
+      >
+        <ion-item color="white">
+          <ion-label><i class="fas fa-paperclip"></i></ion-label>
+          <ion-input
+            type="url"
+            placeholder="Link allegato {{i+1}}... "
+            [(ngModel)]="this.attachments[i].id"
+            name="attachment{{i}}"
+          ></ion-input>
+        </ion-item>
+        <ion-button
+          [disabled]="attachments.length >= 5"
+          (click)="addAttachment()"
+          ><i class="fas fa-plus"></i
+        ></ion-button>
+        <ion-button [disabled]="i == 0" (click)="removeAttachment(i)"
+          ><i class="fas fa-times"></i
+        ></ion-button>
+      </ion-row>
+    </ion-grid>
+    <ion-button color="success" type="submit">Crea Ticket</ion-button>
+  </form>
+</ion-content>

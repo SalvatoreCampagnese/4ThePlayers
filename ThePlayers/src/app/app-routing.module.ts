@@ -101,7 +101,11 @@ const routes: Routes = [
       import("./reset-password/reset-password.module").then(
         (m) => m.ResetPasswordPageModule
       ),
+  },  {
+    path: 'ticket',
+    loadChildren: () => import('./ticket/ticket.module').then( m => m.TicketPageModule)
   },
+
 ];
 
 @NgModule({

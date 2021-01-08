@@ -30,15 +30,24 @@ export class TournamentDetailPage implements OnInit {
   showMatches: boolean = false;
   isOpen: boolean = false;
   alreadyMatched: boolean = false;
+  showModalCreateMatch: boolean = false;
+  matchForm = {
+    ruleset: "",
+    nrPlayers: "",
+  };
 
   teamsList: any;
   userTeam: any;
   matchesList: any;
   matchPending: any;
+  matchesNotAccepted: any;
 
   userCoins: number = 0;
   counterMatchPending: number = 0;
   counterMatchClosed: number = 0;
+
+  showErrorNrPlayers: boolean = false;
+  showErrorRuleset: boolean = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -112,10 +121,18 @@ export class TournamentDetailPage implements OnInit {
         if (userTeam) {
           this.userTeam = userTeam;
           this.showSubscribeBox = false;
+          let minOfPlayersPerTeam = 999;
+          let maxOfPlayersPerTeam = 0;
+          for (let i = 0; i < ruleset.length; i++) {
+            if (ruleset[i].maxNumberOfPlayersPerTeam > maxOfPlayersPerTeam)
+              maxOfPlayersPerTeam = ruleset[i].maxNumberOfPlayersPerTeam;
+            if (ruleset[i].minNumberOfPlayersPerTeam < minOfPlayersPerTeam)
+              minOfPlayersPerTeam = ruleset[i].minNumberOfPlayersPerTeam;
+          }
           // Controllo il nr di players in base a quelli del torneo
           if (
-            ruleset.maxNumberOfPlayersPerTeam >= userTeam.members.length &&
-            ruleset.minNumberOfPlayersPerTeam <= userTeam.members.length
+            maxOfPlayersPerTeam >= userTeam.members.length &&
+            minOfPlayersPerTeam <= userTeam.members.length
           ) {
             // Il team è ok e faccio fare le sfide
             this.showCreateMatch = true;
@@ -170,6 +187,7 @@ export class TournamentDetailPage implements OnInit {
                 ) {
                   this.counterMatchPending += 1;
                 }
+                this.matchesNotAccepted = [];
                 // Ha gia' un match in corso
                 if (
                   (this.matchesList[i].teamOne &&
@@ -219,6 +237,20 @@ export class TournamentDetailPage implements OnInit {
 
                   if (this.showMatchPending) {
                     this.matchPending = this.matchesList[i];
+                    for (
+                      var i = 0;
+                      i < this.tournamentDetail.ruleset.length;
+                      i++
+                    ) {
+                      if (
+                        this.matchPending.rulesetId ===
+                        this.tournamentDetail.ruleset[i]._id
+                      ) {
+                        this.matchPending.rulesetName = this.tournamentDetail.ruleset[
+                          i
+                        ].name;
+                      }
+                    }
                   }
                   if (this.alreadyMatched == false) {
                     this.autoCheckForChange(this.matchesList[i]);
@@ -286,9 +318,16 @@ export class TournamentDetailPage implements OnInit {
     return;
   }
 
-  showCreateMatchFn() {
+  createMatchFn() {
+    if (!this.matchForm.ruleset) this.showErrorRuleset = true;
+    else this.showErrorRuleset = false;
+    if (!this.matchForm.nrPlayers) this.showErrorNrPlayers = true;
+    else this.showErrorNrPlayers = false;
+    if (!this.matchForm.ruleset || !this.matchForm.nrPlayers) return;
     const dataToPost = {
       teamId: this.tournamentDetail.userTeam._id,
+      rulesetId: this.matchForm.ruleset,
+      numberOfPlayers: this.matchForm.nrPlayers,
     };
     this.http
       .post(
@@ -299,6 +338,32 @@ export class TournamentDetailPage implements OnInit {
         location.reload();
       });
     return true;
+  }
+
+  showCreateMatchFn() {
+    this.matchesNotAccepted = [];
+    this.http
+      .get(`${this.env.baseUri}/tournaments/${this.idTournament}/matches`)
+      .subscribe((response) => {
+        for (var i = 0; i < Object.keys(response).length; i++) {
+          if (
+            !response[i].teamTwo &&
+            response[i].teamOne &&
+            response[i].teamOne._id !== this.tournamentDetail.userTeam._id
+          ) {
+            const ruleset = this.tournamentDetail.ruleset.find(
+              (item) => item._id == response[i].rulesetId
+            );
+            response[i].rulesetName = ruleset.name;
+            this.matchesNotAccepted.push(response[i]);
+          }
+        }
+        this.showModalCreateMatch = true;
+      });
+  }
+  closeCreateMatch() {
+    this.matchesNotAccepted = [];
+    this.showModalCreateMatch = false;
   }
 
   doRefresh(event) {
@@ -400,5 +465,22 @@ export class TournamentDetailPage implements OnInit {
       15000,
       matchObj
     );
+  }
+
+  acceptMatch(matchObj) {
+    debugger;
+    if (matchObj) {
+      const dataToPost = {
+        teamId: this.tournamentDetail.userTeam._id,
+      };
+      this.http
+        .post(
+          `${this.env.baseUri}/tournaments/${this.idTournament}/matches/${matchObj._id}`,
+          dataToPost
+        )
+        .subscribe((resp) => {
+          location.reload();
+        });
+    }
   }
 }
