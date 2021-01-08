@@ -1,1 +1,9 @@
 node_modules
+key/my-release-key.keystore
+key/my-release-key.keystore.old
+key/private_key.pepk
+key/test.jks
+key/thePlayers.jks
+key/thePlayersNew.jks
+key/upload_cert.der
+ThePlayers/.vs/slnx.sqlite
