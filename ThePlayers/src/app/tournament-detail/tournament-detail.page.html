@@ -20,7 +20,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" style="overflow-y: scroll !important">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
@@ -144,12 +144,12 @@
   <div
     id="classifica"
     *ngIf="showClassifica"
-    style="overflow-y: scroll !important; margin-top: 15px"
+    style="overflow-y: scroll !important; height: 100%; margin-top: 15px"
   >
     <ion-grid>
       <ion-row class="header">
-        <ion-col size="1">#</ion-col>
-        <ion-col size="6">Nome team</ion-col>
+        <ion-col size="1.4">#</ion-col>
+        <ion-col size="5.6">Nome team</ion-col>
         <ion-col size="2">PT</ion-col>
         <ion-col size="1">W</ion-col>
         <ion-col size="1">D</ion-col>
@@ -160,8 +160,8 @@
         *ngFor="let team of teamsList, let i = index"
         (click)="showTeamsInfo(team._id)"
       >
-        <ion-col size="1">{{i + 1}}</ion-col>
-        <ion-col size="6">{{team.name}}</ion-col>
+        <ion-col size="1.4">{{i + 1}}</ion-col>
+        <ion-col size="5.6">{{team.name}}</ion-col>
         <ion-col size="2">{{team.elo}}</ion-col>
         <ion-col size="1">{{team.wins}}</ion-col>
         <ion-col size="1">{{team.ties}}</ion-col>

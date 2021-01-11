@@ -1,0 +1,19 @@
+ion-grid{
+    background: white;
+    color: #2d2d2d;
+    border-radius: 5px;
+    width: 94vw;
+    left: 3vw;
+}
+.vertical-center{
+    ion-col{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+ion-row.header{
+    ion-col{
+        font-weight: bold;
+    }
+}

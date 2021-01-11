@@ -10,7 +10,7 @@ import {
   PushNotification,
   PushNotificationToken,
   PushNotificationActionPerformed,
-} from '@capacitor/core';
+} from "@capacitor/core";
 const { PushNotifications } = Plugins;
 
 const { Storage } = Plugins;
@@ -27,8 +27,8 @@ export class HomePage implements OnInit {
     private http: HttpClient,
     private menuCtrl: MenuController,
     public env: GlobalEnv,
-    public loadingController: LoadingController,
-  ) { }
+    public loadingController: LoadingController
+  ) {}
   gamesList: any = [];
   loading: any;
   userCoins: number = 0;
@@ -44,6 +44,7 @@ export class HomePage implements OnInit {
     this.authService.getToken().then(() => {
       if (this.authService.isLoggedIn) {
         Storage.get({ key: "token" }).then((data) => {
+          this.env.isLoading = true;
           this.getGames(data.value);
           this.menuCtrl.enable(true);
           this.router.navigateByUrl("/home");
@@ -55,11 +56,11 @@ export class HomePage implements OnInit {
     });
   }
 
-
   doRefresh(event) {
     this.authService.getToken().then(() => {
       if (this.authService.isLoggedIn) {
         Storage.get({ key: "token" }).then((data) => {
+          this.env.isLoading = true;
           this.getGames(data.value);
           event.target.complete();
         });
@@ -76,48 +77,54 @@ export class HomePage implements OnInit {
 
   async getGames(token) {
     this.presentLoading();
-    this.http
-      .get(`${this.env.baseUri}/games`)
-      .subscribe((response) => {
+    this.http.get(`${this.env.baseUri}/games`).subscribe(
+      (response) => {
         this.gamesList = response;
-      });
+
+        this.env.isLoading = false;
+      },
+      (error) => {
+        this.env.isLoading = false;
+      }
+    );
   }
 
   allowNotifications() {
-    PushNotifications.requestPermission().then(result => {
+    PushNotifications.requestPermission().then((result) => {
       if (result.granted) {
         // Register with Apple / Google to receive push via APNS/FCM
         PushNotifications.register();
       } else {
         // Show some error
-        window.alert('Errore permessi per notifiche');
+        window.alert("Errore permessi per notifiche");
       }
     });
     // On success, we should be able to receive notifications
-    PushNotifications.addListener('registration',
+    PushNotifications.addListener(
+      "registration",
       (token: PushNotificationToken) => {
-        console.log('Push registration success, token: ' + token.value);
+        console.log("Push registration success, token: " + token.value);
       }
     );
 
     // Some issue with our setup and push will not work
-    PushNotifications.addListener('registrationError',
-      (error: any) => {
-        console.log('Error on registration: ' + JSON.stringify(error));
-      }
-    );
+    PushNotifications.addListener("registrationError", (error: any) => {
+      console.log("Error on registration: " + JSON.stringify(error));
+    });
 
     // Show us the notification payload if the app is open on our device
-    PushNotifications.addListener('pushNotificationReceived',
+    PushNotifications.addListener(
+      "pushNotificationReceived",
       (notification: PushNotification) => {
-        console.log('Push received: ' + JSON.stringify(notification));
+        console.log("Push received: " + JSON.stringify(notification));
       }
     );
 
     // Method called when tapping on a notification
-    PushNotifications.addListener('pushNotificationActionPerformed',
+    PushNotifications.addListener(
+      "pushNotificationActionPerformed",
       (notification: PushNotificationActionPerformed) => {
-        console.log('Push action performed: ' + JSON.stringify(notification));
+        console.log("Push action performed: " + JSON.stringify(notification));
       }
     );
   }

@@ -114,10 +114,16 @@ export class AppComponent {
         icon: "game-controller",
       },
       {
-        title: " Inviti",
+        title: "Inviti",
         url: "/invites",
         icon: "notifications",
         notificationsCount: this.env.notificationsCounter,
+      },
+      {
+        title: "Tickets",
+        url: "/user-tickets",
+        icon: "alert-circle-sharp",
+        ticketUpdates: this.env.ticketUpdates,
       },
       {
         title: "Logout",

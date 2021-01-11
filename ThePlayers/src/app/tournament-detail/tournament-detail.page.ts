@@ -137,12 +137,13 @@ export class TournamentDetailPage implements OnInit {
             // Il team è ok e faccio fare le sfide
             this.showCreateMatch = true;
             this.showErrorTeam = false;
-            this.checkIfHasMatch(this.userTeam);
           } else {
             // Il team non rispetta il nr di giocatori necessari
             this.showErrorTeam = true;
           }
         }
+
+        this.checkIfHasMatch(this.userTeam);
         this.isOpen = this.tournamentDetail.open
           ? this.tournamentDetail.open
           : false;
@@ -238,16 +239,16 @@ export class TournamentDetailPage implements OnInit {
                   if (this.showMatchPending) {
                     this.matchPending = this.matchesList[i];
                     for (
-                      var i = 0;
-                      i < this.tournamentDetail.ruleset.length;
-                      i++
+                      var j = 0;
+                      j < this.tournamentDetail.ruleset.length;
+                      j++
                     ) {
                       if (
                         this.matchPending.rulesetId ===
-                        this.tournamentDetail.ruleset[i]._id
+                        this.tournamentDetail.ruleset[j]._id
                       ) {
                         this.matchPending.rulesetName = this.tournamentDetail.ruleset[
-                          i
+                          j
                         ].name;
                       }
                     }

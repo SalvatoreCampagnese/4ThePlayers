@@ -24,17 +24,19 @@
     <div class="card-body" style="overflow-y: scroll !important; z-index: 10">
       <div class="user-meta ion-text-center">
         <h3 class="playername">{{teamObj && teamObj.name}}</h3>
-        <ion-button color="danger" *ngIf="false" (click)="quitTeam()"
-          ><i class="fas fa-times"></i>&nbsp;&nbsp;Esci dal team</ion-button
-        >
+
         <div class="user-tournament">
           <ion-text>Membri</ion-text>
           <ion-grid *ngIf="teamObj">
             <ion-row
+              size="12"
               *ngFor="let member of teamObj.members"
               class="row-align-center"
             >
-              <ion-col (click)="showUserPage(member)">
+              <ion-col
+                [size]="member.role === 'LEADER' ? 8 : 12"
+                (click)="showUserPage(member)"
+              >
                 <ion-card>
                   <ion-item>
                     <ion-avatar item-start style="border: 1px solid green">
@@ -47,14 +49,24 @@
                   </ion-item>
                 </ion-card>
               </ion-col>
-
-              <ion-button
-                *ngIf="this.isLeader && member.role != 'LEADER'"
-                color="danger"
-                (click)="removeMember(member)"
-              >
-                X
-              </ion-button>
+              <ion-col size="2" *ngIf="isLeader && member.role != 'LEADER'">
+                <ion-button
+                  *ngIf="isLeader && member.role != 'LEADER'"
+                  color="danger"
+                  (click)="removeMember(member)"
+                >
+                  X
+                </ion-button>
+              </ion-col>
+              <ion-col size="2" *ngIf="isLeader && member.role != 'LEADER'">
+                <ion-button
+                  *ngIf="this.isLeader && member.role != 'LEADER'"
+                  color="danger"
+                  (click)="updateLeader(member)"
+                >
+                  <i class="fas fa-crown"></i>
+                </ion-button>
+              </ion-col>
             </ion-row>
           </ion-grid>
         </div>

@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Tickets</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="padding-top: 15px">
+  <br />
+  <ion-title>Ticket Aperti</ion-title>
+  <br />
+  <ion-grid class="vertical-center" *ngIf="ticketsList.length > 0">
+    <ion-row size="12">
+      <ion-col size="5">Titolo</ion-col>
+      <ion-col size="4">Data</ion-col>
+      <ion-col size="1">Stato</ion-col>
+      <ion-col size="2">&nbsp;</ion-col>
+    </ion-row>
+    <ion-row size="12" *ngFor="let ticket of ticketsList">
+      <ion-col size="5">{{ticket.subject}}</ion-col>
+      <ion-col size="4"
+        ><ion-datetime
+          value="{{ticket.date}}"
+          display-timezone="utc"
+          displayFormat="DD/MM/YYYY"
+        ></ion-datetime>
+      </ion-col>
+      <ion-col size="1">
+        <i
+          class="fas fa-check"
+          color="green"
+          *ngIf="ticket.status === 'SOLVED'"
+        ></i>
+        <i
+          class="fas fa-clock"
+          color="yellow"
+          *ngIf="ticket.status === 'IN_PROGRESS'"
+        ></i>
+        <i
+          class="fas fa-star"
+          color="yellow"
+          *ngIf="ticket.status === 'NEW'"
+        ></i>
+      </ion-col>
+      <ion-col size="2"
+        ><ion-button color="success"><i class="fas fa-search"></i></ion-button
+      ></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

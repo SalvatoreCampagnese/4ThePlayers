@@ -105,6 +105,14 @@ const routes: Routes = [
     path: 'ticket',
     loadChildren: () => import('./ticket/ticket.module').then( m => m.TicketPageModule)
   },
+  {
+    path: 'user-tickets',
+    loadChildren: () => import('./user-tickets/user-tickets.module').then( m => m.UserTicketsPageModule)
+  },
+  {
+    path: 'bracket-tournament',
+    loadChildren: () => import('./bracket-tournament/bracket-tournament.module').then( m => m.BracketTournamentPageModule)
+  },
 
 ];
 
