@@ -28,6 +28,10 @@ export class AuthService {
       })
       .pipe(
         tap((token) => {
+          if (token['status'] === 'NOT_VERIFIED') {
+            window.alert('Non hai ancora verificato il tuo account, controlla la tua email.');
+            return;
+          }
           Storage.set({
             key: "token",
             value: token["token"],

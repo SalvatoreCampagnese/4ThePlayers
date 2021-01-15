@@ -19,7 +19,7 @@ export class TeamDetailPage implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   teamId: any;
   userId: string;
@@ -46,7 +46,7 @@ export class TeamDetailPage implements OnInit {
       this.http
         .get(
           this.env.baseUri +
-            `/tournaments/${this.tournamentId}/teams/${this.teamId}`
+          `/tournaments/${this.tournamentId}/teams/${this.teamId}`
         )
         .subscribe((resp) => {
           this.teamObj = resp;
@@ -82,7 +82,7 @@ export class TeamDetailPage implements OnInit {
         this.http
           .patch(
             this.env.baseUri +
-              `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
+            `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
             { membersToRemove: [userId] }
           )
           .subscribe(
@@ -102,7 +102,7 @@ export class TeamDetailPage implements OnInit {
       this.http
         .patch(
           this.env.baseUri +
-            `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
+          `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
           { membersToRemove: [this.userId] }
         )
         .subscribe(
@@ -114,5 +114,9 @@ export class TeamDetailPage implements OnInit {
           }
         );
     }
+  }
+
+  updateLeader(member) {
+
   }
 }

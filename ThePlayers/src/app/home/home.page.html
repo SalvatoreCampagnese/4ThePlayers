@@ -5,9 +5,9 @@
       <ion-badge
         color="danger"
         class="badge-notifiche"
-        *ngIf="this.env.notificationsCounter"
+        *ngIf="this.env.notificationsCounter + this.env.ticketUpdates"
       >
-        {{this.env.notificationsCounter}}</ion-badge
+        {{this.env.notificationsCounter + this.env.ticketUpdates}}</ion-badge
       >
     </ion-buttons>
     <ion-title>Homepage</ion-title>

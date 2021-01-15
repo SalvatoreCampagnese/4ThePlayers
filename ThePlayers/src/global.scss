@@ -97,6 +97,10 @@ ion-toolbar {
     height: 20px;
     position: absolute;
     left: 50px;
+
+    &.left-65 {
+        left: 65px;
+    }
 }
 
 .tournament-card {
@@ -117,23 +121,23 @@ ion-toolbar {
     }
 }
 
-.loading-wrapper{
+.loading-wrapper {
     width: 100vw;
     height: 100vh;
 
     position: absolute;
     z-index: 9999;
-    
-    background: rgba(0,0,0,0.5);
+
+    background: rgba(0, 0, 0, 0.5);
     color: white !important;
-    
+
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
-.ticket-button{
+.ticket-button {
     position: absolute;
     bottom: 15px;
     right: 15px;
@@ -153,11 +157,11 @@ ion-toolbar {
 ion-select {
     /* Applies to the value and placeholder color */
     color: #545ca7;
-  
+
     /* Set a different placeholder color */
     --placeholder-color: #971e49;
-  
+
     /* Set full opacity on the placeholder */
     --placeholder-opacity: 1;
     background: white;
-  }
+}

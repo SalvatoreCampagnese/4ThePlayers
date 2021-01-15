@@ -19,7 +19,7 @@ export class UsersPage implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
   userSearch: string = null;
   teamId: any;
   teamObj: any;
@@ -64,7 +64,7 @@ export class UsersPage implements OnInit {
       this.http
         .post(
           this.env.baseUri +
-            `/tournaments/${this.tournamentId}/teams/${this.teamId}/invites`,
+          `/tournaments/${this.tournamentId}/teams/${this.teamId}/invites`,
           dataToPost
         )
         .subscribe(
@@ -75,7 +75,7 @@ export class UsersPage implements OnInit {
           },
           (error) => {
             this.env.isLoading = false;
-            window.alert("Errore durante l'invito");
+            window.alert(error.error.errors[0].msg);
             location.reload();
           }
         );
@@ -100,7 +100,7 @@ export class UsersPage implements OnInit {
             this.http
               .get(
                 this.env.baseUri +
-                  `/tournaments/${this.tournamentId}/teams/${this.teamId}`
+                `/tournaments/${this.tournamentId}/teams/${this.teamId}`
               )
               .subscribe((resp) => {
                 this.teamObj = resp;

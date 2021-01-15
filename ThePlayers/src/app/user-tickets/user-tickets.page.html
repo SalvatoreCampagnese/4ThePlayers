@@ -2,17 +2,27 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
+      <ion-badge
+        color="danger"
+        class="badge-notifiche"
+        *ngIf="this.env.notificationsCounter + this.env.ticketUpdates"
+      >
+        {{this.env.notificationsCounter + this.env.ticketUpdates}}</ion-badge
+      >
     </ion-buttons>
     <ion-title>Tickets</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content style="padding-top: 15px">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <br />
   <ion-title>Ticket Aperti</ion-title>
   <br />
   <ion-grid class="vertical-center" *ngIf="ticketsList.length > 0">
-    <ion-row size="12">
+    <ion-row size="12" class="header">
       <ion-col size="5">Titolo</ion-col>
       <ion-col size="4">Data</ion-col>
       <ion-col size="1">Stato</ion-col>
@@ -21,32 +31,71 @@
     <ion-row size="12" *ngFor="let ticket of ticketsList">
       <ion-col size="5">{{ticket.subject}}</ion-col>
       <ion-col size="4"
-        ><ion-datetime
-          value="{{ticket.date}}"
-          display-timezone="utc"
-          displayFormat="DD/MM/YYYY"
-        ></ion-datetime>
+        >
+        <ion-datetime value="{{ticket.createdAt}}"
+        display-timezone="utc" 
+        displayFormat="DD/MM/YYYY HH:mm:ss" disabled></ion-datetime>
       </ion-col>
       <ion-col size="1">
         <i
           class="fas fa-check"
-          color="green"
           *ngIf="ticket.status === 'SOLVED'"
         ></i>
         <i
           class="fas fa-clock"
-          color="yellow"
           *ngIf="ticket.status === 'IN_PROGRESS'"
         ></i>
         <i
           class="fas fa-star"
-          color="yellow"
           *ngIf="ticket.status === 'NEW'"
         ></i>
       </ion-col>
       <ion-col size="2"
-        ><ion-button color="success"><i class="fas fa-search"></i></ion-button
+        ><ion-button color="success" (click)="openTicketDetail(ticket._id)"><i class="fas fa-search"></i></ion-button
       ></ion-col>
     </ion-row>
   </ion-grid>
+  <div class="ticket-detail-container" *ngIf="showTicketInfo">
+    <div class="ticket-detail-modal">
+      <h1>Ticket</h1>
+      <div *ngIf="ticketInfo.category === 'DISPUTE'">
+        <ion-text>{{ticketInfo.matchObj.teamOneName}} vs {{ticketInfo.matchObj.teamTwoName}}</ion-text><br/><br/>
+        <ion-text><b>Torneo</b><br/>{{ticketInfo.tournamentName}}</ion-text>
+        <ion-datetime value="{{ticketInfo.createdAt}}"
+        display-timezone="utc" 
+        displayFormat="DD/MM/YYYY HH:mm:ss" disabled></ion-datetime><br/><br/>
+      </div>
+      <div *ngIf="ticketInfo.category !== 'DISPUTE'">
+        <ion-datetime value="{{ticketInfo.createdAt}}"
+        display-timezone="utc" 
+        displayFormat="DD/MM/YYYY HH:mm:ss" disabled></ion-datetime>
+      </div><br/>
+      <ion-text style="font-weight: bold">Messaggi</ion-text><br/>
+      <div *ngIf="ticketInfo.messages.length == 0">Nessun messaggio...</div>
+      <div *ngIf="ticketInfo.messages.length > 0">
+        <ion-grid style="width: 100%;" class="no-background">
+          <ion-row size="12" *ngFor="let message of ticketInfo.messages, let i = index">
+            <ion-col>
+              <ion-row *ngIf="message.fromAdminPanel"><p style="margin: 5px 0px" [ngClass]="(message.userId !== loggedUserId) ? 'text-align-right admin' : 'admin'" >{{message.username}}</p></ion-row>
+              <ion-row *ngIf="!message.fromAdminPanel"><p style="margin: 5px 0px" [ngClass]="(message.userId !== loggedUserId) ? 'text-align-right' : ''" >{{message.username}}</p></ion-row>
+              <ion-row ><p [ngClass]="(message.userId !== loggedUserId) ? 'text-align-right italic' : 'italic'"><ion-datetime value="{{message.createdAt}}"
+                display-timezone="utc" 
+                displayFormat="DD/MM/YYYY HH:mm:ss" disabled></ion-datetime></p></ion-row>
+              <ion-row ><p [ngClass]="(message.userId !== loggedUserId) ? 'text-align-right margin-5-0' : 'margin-5-0'">{{message.message}}</p></ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div><br/><br/>
+      <form (submit)="addMessageToTicket(ticketInfo._id)">
+        <ion-item color="white">
+          <ion-textarea [(ngModel)]="newMessage" name="newMessage" placeholder="Aggiungi messaggio..." rows="5" required>
+          </ion-textarea>
+        </ion-item>
+        
+        <ion-button color="success" type="submit">Aggiungi messaggio</ion-button>
+        <ion-button color="danger" (click)="closeTicketDetail()">Chiudi</ion-button>
+      </form>
+    </div>
+
+  </div>
 </ion-content>

@@ -56,7 +56,7 @@ export class TournamentDetailPage implements OnInit {
     private http: HttpClient,
     public env: GlobalEnv,
     public loadingController: LoadingController
-  ) {}
+  ) { }
 
   loading: any;
   timeoutCheck: any = null;
@@ -193,10 +193,10 @@ export class TournamentDetailPage implements OnInit {
                 if (
                   (this.matchesList[i].teamOne &&
                     this.matchesList[i].teamOne._id ===
-                      this.tournamentDetail.userTeam._id) ||
+                    this.tournamentDetail.userTeam._id) ||
                   (this.matchesList[i].teamTwo &&
                     this.matchesList[i].teamTwo._id ===
-                      this.tournamentDetail.userTeam._id)
+                    this.tournamentDetail.userTeam._id)
                 ) {
                   if (
                     this.matchesList[i].teamOne._id ===
@@ -301,21 +301,29 @@ export class TournamentDetailPage implements OnInit {
   }
 
   changeResultMatch(matchObj, result) {
-    if (this.tournamentDetail.userTeam._id) {
-      const dataToPatch = {
-        teamId: this.tournamentDetail.userTeam._id,
-        action: "POST_RESULT",
-        result: result,
-      };
-      this.http
-        .patch(
-          `${this.env.baseUri}/tournaments/${this.idTournament}/matches/${matchObj._id}`,
-          dataToPatch
-        )
-        .subscribe((resp) => {
-          location.reload();
-        });
+    let text = ""
+    if (result == 'WIN') text = "Sei sicuro di aver vinto?"
+    else if (result == 'LOSS') text = "Sei sicuro di aver perso?"
+    else text = "Sei sicuro di aver pareggiato?"
+    var r = confirm(text);
+    if (r == true) {
+      if (this.tournamentDetail.userTeam._id) {
+        const dataToPatch = {
+          teamId: this.tournamentDetail.userTeam._id,
+          action: "POST_RESULT",
+          result: result,
+        };
+        this.http
+          .patch(
+            `${this.env.baseUri}/tournaments/${this.idTournament}/matches/${matchObj._id}`,
+            dataToPatch
+          )
+          .subscribe((resp) => {
+            location.reload();
+          });
+      }
     }
+
     return;
   }
 
@@ -469,7 +477,6 @@ export class TournamentDetailPage implements OnInit {
   }
 
   acceptMatch(matchObj) {
-    debugger;
     if (matchObj) {
       const dataToPost = {
         teamId: this.tournamentDetail.userTeam._id,

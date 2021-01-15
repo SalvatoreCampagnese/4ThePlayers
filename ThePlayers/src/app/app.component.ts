@@ -24,6 +24,7 @@ export class AppComponent {
   notifications: any;
   token: string;
   getInviteInterval: any;
+  getTicketsInterval: any;
   userId: string = null;
   constructor(
     private platform: Platform,
@@ -35,8 +36,8 @@ export class AppComponent {
     private authService: AuthService,
     public env: GlobalEnv
   ) {
-    this.sideMenu();
     this.initializeApp();
+    this.sideMenu();
 
     //
     this.platform.ready().then(() => {
@@ -63,6 +64,7 @@ export class AppComponent {
     });
     this.authService.getToken().then(() => {
       this.getInvites();
+      this.getTickets();
     });
   }
 
@@ -98,6 +100,38 @@ export class AppComponent {
     }
     if (!this.getInviteInterval) {
       this.getInviteInterval = setInterval(this.getInvites.bind(this), 60000);
+    }
+  }
+
+  async getTickets() {
+    console.log(new Date().toLocaleString() + " - getTickets");
+    const token = await Storage.get({ key: "token" }).then((data) => {
+      if (data.value) {
+        return data.value;
+      }
+    });
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken["id"];
+      this.userId = userId;
+      this.http.get(this.env.baseUri + `/tickets`).subscribe(
+        (resp) => {
+          let counterTickets = 0;
+          for (let i = 0; i < Object.keys(resp).length; i++) {
+            if (resp[i] && resp[i].status === 'NEW') {
+              counterTickets++
+            }
+          }
+          this.env.ticketUpdates = counterTickets;
+          this.sideMenu()
+        },
+        (error) => {
+          // Empty
+        }
+      );
+    }
+    if (!this.getTicketsInterval) {
+      this.getTicketsInterval = setInterval(this.getTickets.bind(this), 120000);
     }
   }
 

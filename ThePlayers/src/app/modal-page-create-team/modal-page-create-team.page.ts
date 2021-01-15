@@ -25,9 +25,9 @@ export class ModalPageCreateTeamPage implements OnInit {
     private http: HttpClient,
     private router: Router,
     public env: GlobalEnv
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   CreateTeam() {
     this.env.isLoading = true;
@@ -43,6 +43,10 @@ export class ModalPageCreateTeamPage implements OnInit {
   }
 
   createTeamRest(token) {
+    if (!this.teamname) {
+      window.alert('Inserisci un nome al team');
+      return;
+    }
     let urlImg;
     switch (this.selectedAvatar) {
       case 1:

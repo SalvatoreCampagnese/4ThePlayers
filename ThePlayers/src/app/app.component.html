@@ -18,6 +18,13 @@
             >
               {{ pages.notificationsCount }}</ion-badge
             >
+            <ion-badge
+            color="danger"
+            class="badge-notifiche-menu left-65"
+            *ngIf="pages.ticketUpdates"
+          >
+            {{ this.env.ticketUpdates }}</ion-badge
+          >
             {{ pages.title }}
           </ion-item>
         </ion-menu-toggle>
@@ -34,7 +41,7 @@
       <br />
       Caricamento in corso...
     </div>
-    <div class="ticket-button" (click)="openTicket()">
+    <div class="ticket-button" *ngIf="this.authService.isLoggedIn" (click)="openTicket()">
       <i class="fas fa-exclamation"></i>
     </div>
   </ion-router-outlet>

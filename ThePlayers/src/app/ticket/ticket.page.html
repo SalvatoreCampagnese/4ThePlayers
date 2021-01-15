@@ -47,7 +47,7 @@
     <ion-grid>
       <ion-row
         size="12"
-        *ngFor="let attachment of this.attachments; let i = index"
+        *ngFor="let attachment of attachments; let i = index"
         style="margin-bottom: 5px"
       >
         <ion-col size="8">
@@ -56,8 +56,8 @@
             <ion-input
               type="url"
               placeholder="Link allegato {{i+1}}... "
-              [(ngModel)]="this.attachments[i].id"
-              name="attachment{{i}}"
+              [(ngModel)]="attachments[i].value"
+              name={{i}}
             ></ion-input>
           </ion-item>
         </ion-col>

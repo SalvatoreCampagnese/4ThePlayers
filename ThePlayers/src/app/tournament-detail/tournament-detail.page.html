@@ -5,9 +5,9 @@
       <ion-badge
         color="danger"
         class="badge-notifiche"
-        *ngIf="this.env.notificationsCounter"
+        *ngIf="this.env.notificationsCounter + this.env.ticketUpdates"
       >
-        {{this.env.notificationsCounter}}</ion-badge
+        {{this.env.notificationsCounter + this.env.ticketUpdates}}</ion-badge
       >
     </ion-buttons>
     <ion-title>Torneo</ion-title>
@@ -183,11 +183,11 @@
   >
     <div *ngIf="counterMatchPending != 0">
       <ion-text>Match in corso: {{counterMatchPending}}</ion-text>
-      <ion-grid>
-        <ion-row *ngFor="let match of matchesList" class="border-bottom">
+      <ion-grid class="no-background">
+        <ion-row *ngFor="let match of matchesList, let i = index" >
           <ion-row
             *ngIf="match.status == 'PENDING' && match.teamOne && match.teamTwo"
-            style="width: 100%"
+            style="width: 100%; margin-bottom: 2px;"
           >
             <ion-col
               size="5"
@@ -214,10 +214,10 @@
         </ion-row>
       </ion-grid>
     </div>
-    <div *ngIf="counterMatchClosed != 0" style="margin-top: 15px">
+    <div *ngIf="counterMatchClosed != 0" style="margin-top: 15px; padding-bottom: 150px">
       <ion-text>Match conclusi: {{counterMatchClosed}}</ion-text>
-      <ion-grid>
-        <ion-row *ngFor="let match of matchesList" class="border-bottom">
+      <ion-grid class="no-background">
+        <ion-row *ngFor="let match of matchesList, let i = index" style="margin-bottom: 2px;">
           <ion-row
             style="width: 100%"
             *ngIf="match.status=='TEAM1' || match.status=='TEAM2'"
