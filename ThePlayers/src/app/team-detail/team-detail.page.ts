@@ -61,6 +61,19 @@ export class TeamDetailPage implements OnInit {
               )
                 this.isLeader = true;
             }
+
+            if (member.dateJoined) {
+              const today = new Date();
+              const dateJoined = new Date(member.dateJoined)
+              const UTC = new Date(Date.UTC(dateJoined.getFullYear(), dateJoined.getMonth(), dateJoined.getDate(), dateJoined.getHours(), dateJoined.getMinutes(), dateJoined.getSeconds(), dateJoined.getMilliseconds()))
+              const diffTime = today.getTime() - dateJoined.getTime();
+              const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+              member.isOk = false;
+              console.log(diffHours)
+              if (diffHours >= 4) {
+                member.isOk = true;
+              }
+            }
           }
         });
     }
@@ -76,7 +89,9 @@ export class TeamDetailPage implements OnInit {
   }
 
   removeMember(userObj) {
-    if (userObj) {
+    const text = "Sei sicuro di voler rimuovere il player?"
+    var r = confirm(text);
+    if (userObj && r === true) {
       const userId = userObj.userId;
       if (userId && this.isLeader) {
         this.http
@@ -118,5 +133,23 @@ export class TeamDetailPage implements OnInit {
 
   updateLeader(member) {
 
+    const text = "Sei sicuro di voler promuovere il player a leader del team?"
+    var r = confirm(text);
+    if (member && r === true) {
+      this.http
+        .patch(
+          this.env.baseUri +
+          `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
+          { "newLeader": member.userId }
+        )
+        .subscribe(
+          (resp) => {
+            location.reload();
+          },
+          (error) => {
+            window.alert("errore nella rimozione del player.");
+          }
+        );
+    }
   }
 }

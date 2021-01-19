@@ -33,7 +33,7 @@ export class AppComponent {
     private network: Network,
     private router: Router,
     private http: HttpClient,
-    private authService: AuthService,
+    public authService: AuthService,
     public env: GlobalEnv
   ) {
     this.initializeApp();

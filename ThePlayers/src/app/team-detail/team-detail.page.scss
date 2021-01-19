@@ -24,7 +24,7 @@
 
 .card-body {
     background-color: #ffffff;
-    padding: 30px;
+    padding: 15px;
     height: calc(100vh - (200px + 56px));
     overflow: hidden;
 
@@ -45,31 +45,55 @@
         }
     }
 
-    .user-tournament{
+    .user-tournament {
         color: #2d2d2d;
-        h2{
+
+        h3 {
             color: #2d2d2d;
         }
     }
 }
-.row-align-center{
+
+.row-align-center {
     display: flex;
     align-items: center;
-    
+
 }
-.leader-text{
+
+.leader-text {
     color: red !important;
 }
-.user-data{
+
+.user-data {
     display: flex;
     flex-direction: column;
     padding-left: 15px;
-    h2{
+
+    h3 {
         color: white !important;
         margin: 0px;
     }
-    p{
+
+    p {
         margin: 0px;
         color: #f2f2f2a1;
     }
+}
+
+ion-avatar {
+    width: 25px;
+    height: 25px;
+    min-width: 25px;
+    min-height: 25px;
+}
+
+ion-card.not-ok:after {
+    content: " ";
+    background: #bd1010;
+    width: 10px;
+    position: absolute;
+    height: 50px;
+    top: 0px;
+    left: 0px;
+    z-index: 9999;
 }

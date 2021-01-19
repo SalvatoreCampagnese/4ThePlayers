@@ -34,16 +34,16 @@
               class="row-align-center"
             >
               <ion-col
-                [size]="member.role === 'LEADER' ? 8 : 12"
+                [size]="(member.role === 'LEADER' || !isLeader) ? 12 : 8"
                 (click)="showUserPage(member)"
               >
-                <ion-card>
+                <ion-card [class]="member.isOk ? '' : 'not-ok'">
                   <ion-item>
                     <ion-avatar item-start style="border: 1px solid green">
                       <img src="../../assets/img/avatar-1.jpg" />
                     </ion-avatar>
                     <div class="user-data">
-                      <h2>{{member.username}}</h2>
+                      <h3>{{member.username}}</h3>
                       <p *ngIf="member.role == 'LEADER'">Leader</p>
                     </div>
                   </ion-item>
@@ -55,7 +55,7 @@
                   color="danger"
                   (click)="removeMember(member)"
                 >
-                  X
+                  <i class="fas fa-times"></i>
                 </ion-button>
               </ion-col>
               <ion-col size="2" *ngIf="isLeader && member.role != 'LEADER'">

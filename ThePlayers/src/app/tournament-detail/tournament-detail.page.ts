@@ -8,6 +8,7 @@ import { AuthService } from "src/app/services/auth.service";
 import { Plugins } from "@capacitor/core";
 import { GlobalEnv } from "../env";
 import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
+import jwtDecode from 'jwt-decode';
 const { Storage } = Plugins;
 
 @Component({
@@ -48,6 +49,7 @@ export class TournamentDetailPage implements OnInit {
 
   showErrorNrPlayers: boolean = false;
   showErrorRuleset: boolean = false;
+  isLeader: boolean = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -59,6 +61,7 @@ export class TournamentDetailPage implements OnInit {
   ) { }
 
   loading: any;
+  userId: string = null;
   timeoutCheck: any = null;
   async presentLoading() {
     // Prepare a loading controller
@@ -84,6 +87,7 @@ export class TournamentDetailPage implements OnInit {
         this.authService.getToken().then(() => {
           if (this.authService.isLoggedIn) {
             Storage.get({ key: "token" }).then((data) => {
+              this.userId = jwtDecode(data.value)['id'];
               this.getTournamentDetail(this.idTournament, data.value);
             });
           } else {
@@ -119,6 +123,13 @@ export class TournamentDetailPage implements OnInit {
         const userTeam = this.tournamentDetail.userTeam,
           ruleset = this.tournamentDetail.ruleset;
         if (userTeam) {
+          // Controllo se e' il leader
+          userTeam.members.forEach(item => {
+            if (item.userId == this.userId && item.role === 'LEADER') {
+              this.isLeader = true;
+            }
+          });
+
           this.userTeam = userTeam;
           this.showSubscribeBox = false;
           let minOfPlayersPerTeam = 999;
@@ -141,6 +152,7 @@ export class TournamentDetailPage implements OnInit {
             // Il team non rispetta il nr di giocatori necessari
             this.showErrorTeam = true;
           }
+
         }
 
         this.checkIfHasMatch(this.userTeam);
@@ -153,7 +165,15 @@ export class TournamentDetailPage implements OnInit {
         } else {
           this.teamsList.sort((a, b) => (a.elo < b.elo ? 1 : -1));
         }
-
+        if (this.teamsList && this.userTeam) {
+          let rank = 1;
+          this.teamsList.forEach((item) => {
+            if (item._id === this.userTeam._id) {
+              this.userTeam.rank = rank;
+            }
+            rank++;
+          })
+        }
         this.env.isLoading = false;
       },
       (error) => {
@@ -370,6 +390,7 @@ export class TournamentDetailPage implements OnInit {
         this.showModalCreateMatch = true;
       });
   }
+
   closeCreateMatch() {
     this.matchesNotAccepted = [];
     this.showModalCreateMatch = false;

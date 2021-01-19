@@ -24,7 +24,6 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
   <div id="container flex-direction-column" style="margin-bottom: 10px">
     <!-- Mostro se deve creare il team -->
     <ion-text *ngIf="showSubscribeBox == true && isOpen == true"
@@ -40,25 +39,22 @@
       style="margin-top: 10px"
       >Iscrizioni alla competizione chiuse.</ion-text
     >
-
     <!-- Mostro se non rispecchia il nr di membri corretto -->
-    <ion-text *ngIf="showErrorTeam == true" style="padding: 15px"
-      >Non hai un nr. adeguato di membri per pubblicare una sfida.</ion-text
-    ><br />
-    <ion-button (click)="showInviteMembers()" *ngIf="showErrorTeam == true"
+    <ion-text *ngIf="showErrorTeam == true && isLeader" style="padding: 15px"
+      >Non hai un nr. adeguato di membri per pubblicare una sfida.<br /></ion-text
+    >
+    <ion-button (click)="showInviteMembers()" *ngIf="showErrorTeam == true && isLeader"
       >Invita Membri</ion-button
     >
-
     <!-- Mostro se è ok -->
-    <ion-text *ngIf="showCreateMatch == true">Gioca ora!</ion-text><br />
-    <ion-button (click)="showCreateMatchFn()" *ngIf="showCreateMatch == true"
+    <ion-text *ngIf="showCreateMatch == true && isLeader">Gioca ora!<br /></ion-text>
+    <ion-button (click)="showCreateMatchFn()" *ngIf="showCreateMatch == true && isLeader"
       >Crea un Match</ion-button
     ><br />
-    <ion-button (click)="showInviteMembers()" *ngIf="showCreateMatch == true"
+    <ion-button (click)="showInviteMembers()" *ngIf="showCreateMatch == true && isLeader"
       ><i class="fas fa-plus"></i>&nbsp;Invita Membri</ion-button
     >
-
-    <div *ngIf="showMatchPending === true">
+    <div *ngIf="showMatchPending === true && isLeader">
       <ion-text>Match in Corso!</ion-text> <br />
       <div *ngIf="alreadyMatched==true">
         <ion-card>
@@ -124,6 +120,54 @@
           >Cancella
         </ion-button>
       </div>
+    </div>
+    <div *ngIf="!showSubscribeBox && !isLeader">
+      <ion-card style="background: white; text-align: center; display: flex; justify-content: center; flex-direction: column; align-items: center; padding: 15px" width="100%">
+        <ion-avatar width="50" height="50"><img src="{{tournamentDetail.imgUrl}}"/></ion-avatar><br>
+        <b>{{userTeam.name}}</b><br>
+        {{userTeam.rank}}&deg; Posizione<br>
+        <div *ngIf="showMatchPending && alreadyMatched">
+          <ion-grid>
+            <ion-row style="width: 100%">
+              <ion-col size="5" class="ion-text-center centered"
+                ><div class="avatar avatar1"></div>
+                {{this.matchPending.teamOne.name}}</ion-col
+              >
+              <ion-col size="2" class="ion-text-center"> vs </ion-col>
+              <ion-col size="5" class="ion-text-center centered"
+                ><div class="avatar avatar1"></div>
+                {{this.matchPending.teamTwo.name}}</ion-col
+              >
+              <ion-col
+                size="12"
+                class="ion-text-center"
+                style="font-size: 0.8em; font-style: italic"
+                >{{this.matchPending.createdAt}}</ion-col
+              >
+              <ion-col
+                size="12"
+                class="ion-text-center"
+                style="font-size: 0.8em; font-style: italic"
+                >Regolamento: {{this.matchPending.rulesetName}}</ion-col
+              >
+              <ion-col
+                *ngFor="let item of [].constructor(matchPending.maps.length); let i = index"
+                size="4"
+                class="ion-text-center"
+                style="font-size: 0.8em; font-weight: bold"
+                >Mappa {{i + 1}}</ion-col
+              >
+              <ion-col
+                *ngFor="let map of matchPending.maps"
+                size="4"
+                class="ion-text-center"
+                style="font-size: 0.8em; font-style: italic"
+                >{{map}}</ion-col
+              >
+            </ion-row>
+          </ion-grid>
+        </div>
+      </ion-card>
     </div>
   </div>
 
