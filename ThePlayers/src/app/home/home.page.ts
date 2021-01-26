@@ -130,6 +130,7 @@ export class HomePage implements OnInit {
   }
 
   showBuyCoins() {
+    //this.router.navigateByUrl("/buy-credits");
     // Empty
   }
 }

@@ -41,3 +41,19 @@
     width: 100%;
     height: 100%;
   }
+
+.tournament-detail{
+  padding: 3px 5px;
+  margin-top: 0px;
+  width: 50%;
+  font-size: 0.9em;
+  border-radius: 0px 5px 5px 0px;
+
+  &.ladder{
+    background: #121296bf;
+  }
+  &.tournament{
+    width: 80%;
+    background: #961212bf;
+  }
+}

@@ -19,19 +19,22 @@
               {{ pages.notificationsCount }}</ion-badge
             >
             <ion-badge
-            color="danger"
-            class="badge-notifiche-menu left-65"
-            *ngIf="pages.ticketUpdates"
-          >
-            {{ this.env.ticketUpdates }}</ion-badge
-          >
+              color="danger"
+              class="badge-notifiche-menu left-65"
+              *ngIf="pages.ticketUpdates"
+            >
+              {{ this.env.ticketUpdates }}</ion-badge
+            >
             {{ pages.title }}
           </ion-item>
         </ion-menu-toggle>
       </ion-list>
       <div style="text-align: center">
         <ion-title center>Main Sponsor</ion-title>
-        <img src="../assets/img/hydralogo.png" style="width: 50vw" />
+        <img src="../assets/img/hydralogo.png" style="width: 45vw" /><br />
+        <a href="https://discord.gg/s9mRV5tUNY"
+          ><img src="../assets/img/logodiscord.png" style="width: 45vw"
+        /></a>
       </div>
     </ion-content>
   </ion-menu>
@@ -41,7 +44,11 @@
       <br />
       Caricamento in corso...
     </div>
-    <div class="ticket-button" *ngIf="this.authService.isLoggedIn" (click)="openTicket()">
+    <div
+      class="ticket-button"
+      *ngIf="this.authService.isLoggedIn"
+      (click)="openTicket()"
+    >
       <i class="fas fa-exclamation"></i>
     </div>
   </ion-router-outlet>

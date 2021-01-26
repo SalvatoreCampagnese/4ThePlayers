@@ -29,13 +29,13 @@ export class UserDetailPage implements OnInit {
         if (this.authService.isLoggedIn) {
           Storage.get({ key: "token" }).then((data) => {
             this.token = data.value;
-            if (!params["userObj"]) {
+            if (!params["userId"]) {
               this.userObj = {};
               const deserialized = jwtDecode(this.token);
               this.userId = deserialized["id"];
               this.userObj["userId"] = deserialized["id"];
             } else {
-              this.userObj = JSON.parse(params["userObj"]);
+              this.userId = params["userId"];
             }
             this.showInfo();
           });
@@ -47,21 +47,55 @@ export class UserDetailPage implements OnInit {
   }
 
   showInfo() {
-    if (this.userObj) {
-      const userId = this.userObj.userId;
-      if (userId) {
-        this.http
-          .get(`${this.env.baseUri}/users/${userId}`)
-          .subscribe((response) => {
-            if (response) {
-              const userObj = response["user"];
-              if (userObj) {
-                this.userObj = userObj ? userObj : null;
-                this.tournamentsList = userObj.tournaments;
-              }
+    if (this.userId) {
+      this.http
+        .get(`${this.env.baseUri}/users/${this.userId}`)
+        .subscribe((response) => {
+          if (response) {
+            const userObj = response["user"];
+            if (userObj) {
+              this.userObj = userObj ? userObj : null;
+              this.tournamentsList = userObj.tournaments;
             }
-          });
-      }
+            if (userObj && userObj.platforms && userObj.platforms.length > 0) {
+              this.http
+                .get(`${this.env.baseUri}/platforms/`)
+                .subscribe((response) => {
+                  for (let i = 0; i < userObj.platforms.length; i++) {
+                    let platId = userObj.platforms[i]._id;
+                    //response.find()
+                    for (let j = 0; j < Object.keys(response).length; j++) {
+                      if (
+                        response[Object.keys(response)[i]]._id ===
+                        userObj.platforms[i]._id
+                      ) {
+                        switch (response[Object.keys(response)[i]].name) {
+                          case "Playstation":
+                            userObj.platforms[i].icon = "fab fa-playstation";
+                            break;
+                          case "Activision":
+                            userObj.platforms[i].icon = "fab fa-jedi-order";
+                            break;
+                          case "Xbox":
+                            userObj.platforms[i].icon = "fab fa-xbox";
+                            break;
+                          case "PC":
+                            userObj.platforms[i].icon = "fab fa-steam";
+                            break;
+                          case "Nintendo":
+                            userObj.platforms[i].icon = "fas fa-gamepad";
+                            break;
+                          default:
+                            userObj.platforms[i].icon = "fas fa-gamepad";
+                            break;
+                        }
+                      }
+                    }
+                  }
+                });
+            }
+          }
+        });
     }
   }
   DetailTournament(idTournament, tournamentName) {
@@ -74,5 +108,19 @@ export class UserDetailPage implements OnInit {
   }
   editProfile() {
     this.router.navigateByUrl("/edit-profile");
+  }
+
+  showAccordionPlatforms() {
+    const accordionPlatforms = document.getElementById("platforms-accordion"),
+      anglePlatforms = document.getElementById("platforms-angle");
+    if (accordionPlatforms.style.display == "none") {
+      accordionPlatforms.style.display = "block";
+      anglePlatforms.classList.remove("fa-angle-down");
+      anglePlatforms.classList.add("fa-angle-up");
+    } else {
+      accordionPlatforms.style.display = "none";
+      anglePlatforms.classList.remove("fa-angle-up");
+      anglePlatforms.classList.add("fa-angle-down");
+    }
   }
 }

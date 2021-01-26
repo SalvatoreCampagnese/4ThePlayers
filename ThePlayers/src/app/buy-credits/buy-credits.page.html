@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>buyCredits</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item
+      button
+      *ngFor="let p of products"
+      (click)="purchase(p)"
+      detail="false"
+    >
+      <ion-label class="ion-text-wrap">
+        {{ p.title }}
+        <p>{{ p.description }}</p>
+      </ion-label>
+      <ion-button slot="end"> {{ p.price }} {{ p.currency }} </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="full" (click)="restore()">Restore</ion-button>
+
+  <ion-item> Gems: {{ gems }} </ion-item>
+  <ion-item> Is Pro: {{ isPro }} </ion-item>
+</ion-content>

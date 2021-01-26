@@ -8,55 +8,85 @@
 </ion-header>
 
 <ion-content scrollable="true">
-  <div class="card">
-    <div class="header">
-      <div class="avatar">
-        <img src="../../assets/img/avatar-1.jpg" alt="" />
-      </div>
-    </div>
-    <div class="card-body">
-      <div class="user-meta ion-text-center">
-        <h3 class="playername">
-          {{userObj && userObj.username}}<br />
-          <ion-button color="success" (click)="editProfile()"
-            ><i class="fas fa-pen"></i>&nbsp;Modifica</ion-button
-          >
-        </h3>
-        <div *ngIf="userObj">
-          <div class="country" *ngFor="let plat of userObj.platforms">
-            <h5 class="country">{{plat.username}}</h5>
-          </div>
-        </div>
+  <ion-card class="header-container">
+    <ion-card
+      class="header-card"
+      style="
+        background-image: url('https://i.imgur.com/6c0lZoy.png') !important;
+      "
+    ></ion-card>
+    <ion-card
+      class="avatar-card"
+      style="
+        background-image: url('https://i.imgur.com/OCT1szw.png') !important;
+      "
+    ></ion-card>
+  </ion-card>
 
-        <div class="user-tournament">
-          <h2>Tornei</h2>
-          <ion-grid>
-            <ion-row>
-              <ion-col
-                *ngFor="let tournament of tournamentsList"
-                size="6"
-                (click)="DetailTournament(tournament._id, tournament.name)"
-              >
-                <ion-card
-                  color="primary"
-                  class="tournament-card"
-                  style="background-image: url({{tournament.imgUrl}});"
-                >
-                  <div min-height="40px"></div>
-                  <div class="tournament-info">
-                    <ion-card-title>{{tournament.name}}</ion-card-title>
-                    <ion-card-subtitle
-                      ><i class="fab fa-playstation"></i>&nbsp;&nbsp;<i
-                        class="fab fa-xbox"
-                      ></i>
-                    </ion-card-subtitle>
-                  </div>
-                </ion-card>
-              </ion-col>
+  <div class="card-body" style="overflow-y: scroll !important; z-index: 10">
+    <ion-grid style="padding: 0px 15px">
+      <ion-row>
+        <ion-col size="10"><h3>{{userObj && userObj.username}}</h3></ion-col>
+        <ion-col size="2"
+          ><ion-button color="success" (click)="editProfile()"
+            ><i class="fas fa-pen"></i></ion-button
+        ></ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div
+      *ngIf="userObj && userObj.platforms && userObj.platforms.length > 0"
+      style="padding: 0px 10px"
+    >
+      <ion-grid
+        style="background-color: white; border-radius: 10px; color: #2d2d2d"
+      >
+        <ion-row (click)="showAccordionPlatforms()">
+          <ion-col size="10"><h3>Piattaforme</h3></ion-col>
+          <ion-col size="2" style="text-align: center"
+            ><h3><i id="platforms-angle" class="fas fa-angle-down"></i></h3
+          ></ion-col>
+          <ion-row id="platforms-accordion" style="display: none; width: 100%">
+            <ion-row
+              size="12"
+              *ngFor="let plat of userObj.platforms"
+              style="width: 100%"
+            >
+              <ion-col size="3"><i [class]="plat.icon"></i></ion-col>
+              <ion-col size="9">{{plat.username}}</ion-col>
             </ion-row>
-          </ion-grid>
-        </div>
-      </div>
+          </ion-row>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <div class="user-tournament" style="padding: 0px 15px">
+      <h3>Tornei</h3>
+      <ion-grid>
+        <ion-row>
+          <ion-col
+            *ngFor="let tournament of tournamentsList"
+            size="6"
+            (click)="DetailTournament(tournament._id, tournament.name)"
+          >
+            <ion-card
+              color="primary"
+              class="tournament-card"
+              style="background-image: url({{tournament.imgUrl}});"
+            >
+              <div min-height="40px"></div>
+              <div class="tournament-info">
+                <ion-card-title>{{tournament.name}}</ion-card-title>
+                <ion-card-subtitle
+                  ><i class="fab fa-playstation"></i>&nbsp;&nbsp;<i
+                    class="fab fa-xbox"
+                  ></i>
+                </ion-card-subtitle>
+              </div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </div>
   </div>
 </ion-content>

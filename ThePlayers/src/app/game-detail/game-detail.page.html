@@ -2,12 +2,20 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
-      <ion-badge color="danger" class="badge-notifiche" *ngIf="this.env.notificationsCounter + this.env.ticketUpdates">
-        {{this.env.notificationsCounter + this.env.ticketUpdates}}</ion-badge>
+      <ion-badge
+        color="danger"
+        class="badge-notifiche"
+        *ngIf="this.env.notificationsCounter + this.env.ticketUpdates"
+      >
+        {{this.env.notificationsCounter + this.env.ticketUpdates}}</ion-badge
+      >
     </ion-buttons>
     <ion-title> {{this.gameName}} </ion-title>
-    <ion-buttons style="padding-right: 20px;" slot="end" >
-      <ion-text>{{this.userCoins}}</ion-text>&nbsp;&nbsp;<i class="fas fa-coins" color="orange"></i>
+    <ion-buttons style="padding-right: 20px" slot="end">
+      <ion-text>{{this.userCoins}}</ion-text>&nbsp;&nbsp;<i
+        class="fas fa-coins"
+        color="orange"
+      ></i>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -23,15 +31,31 @@
   </ion-header>
 
   <div id="container">
-    <strong style="margin-left: 15px;">Tornei</strong>
+    <strong style="margin-left: 15px">Tornei</strong>
     <ion-grid>
       <ion-row>
-        <ion-col *ngFor="let tournament of tournamentsList" size="6" (click)="DetailTournament(tournament.id, tournament.name)">
-          <ion-card color="primary" class="tournament-card" style="background-image: url({{tournament.imgUrl}});">
+        <ion-col
+          *ngFor="let tournament of tournamentsList"
+          size="6"
+          (click)="DetailTournament(tournament._id, tournament.name)"
+        >
+          <ion-card
+            color="primary"
+            class="tournament-card"
+            style="background-image: url({{tournament.imgUrl}});"
+          >
+            <div
+              [class]="tournament.type === 'TOURNAMENT' ? 'tournament-detail tournament' : 'tournament-detail ladder'"
+            >
+              {{tournament.type}}
+            </div>
             <div min-height="40px"></div>
             <div class="tournament-info">
               <ion-card-title>{{tournament.name}}</ion-card-title>
-              <ion-card-subtitle><i class="fab fa-playstation"></i>&nbsp;&nbsp;<i class="fab fa-xbox"></i>
+              <ion-card-subtitle
+                ><i class="fab fa-playstation"></i>&nbsp;&nbsp;<i
+                  class="fab fa-xbox"
+                ></i>
               </ion-card-subtitle>
             </div>
           </ion-card>

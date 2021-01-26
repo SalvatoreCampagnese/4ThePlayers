@@ -20,7 +20,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" style="overflow-y: scroll !important">
+<ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
@@ -28,6 +28,10 @@
     <!-- Mostro se deve creare il team -->
     <ion-text *ngIf="showSubscribeBox == true && isOpen == true"
       >Non sei ancora iscritto alla competizione.</ion-text
+    >
+    <ion-text
+      *ngIf="showSubscribeBox == false && tournamentDetail.type === 'TOURNAMENT'"
+      >Ti sei iscritto con successo!</ion-text
     >
     <ion-button
       (click)="showCreateTeamModal()"
@@ -41,17 +45,26 @@
     >
     <!-- Mostro se non rispecchia il nr di membri corretto -->
     <ion-text *ngIf="showErrorTeam == true && isLeader" style="padding: 15px"
-      >Non hai un nr. adeguato di membri per pubblicare una sfida.<br /></ion-text
-    >
-    <ion-button (click)="showInviteMembers()" *ngIf="showErrorTeam == true && isLeader"
+      >Non hai un nr. adeguato di membri per pubblicare una sfida.<br
+    /></ion-text>
+    <ion-button
+      (click)="showInviteMembers()"
+      *ngIf="showErrorTeam == true && isLeader"
       >Invita Membri</ion-button
     >
     <!-- Mostro se è ok -->
-    <ion-text *ngIf="showCreateMatch == true && isLeader">Gioca ora!<br /></ion-text>
-    <ion-button (click)="showCreateMatchFn()" *ngIf="showCreateMatch == true && isLeader"
+    <ion-text
+      *ngIf="showCreateMatch == true && isLeader && tournamentDetail.type === 'LADDER'"
+      >Gioca ora!<br
+    /></ion-text>
+    <ion-button
+      (click)="showCreateMatchFn()"
+      *ngIf="showCreateMatch == true && isLeader && tournamentDetail.type === 'LADDER'"
       >Crea un Match</ion-button
     ><br />
-    <ion-button (click)="showInviteMembers()" *ngIf="showCreateMatch == true && isLeader"
+    <ion-button
+      (click)="showInviteMembers()"
+      *ngIf="showCreateMatch == true && isLeader && tournamentDetail.type === 'LADDER'"
       ><i class="fas fa-plus"></i>&nbsp;Invita Membri</ion-button
     >
     <div *ngIf="showMatchPending === true && isLeader">
@@ -73,12 +86,16 @@
                 size="12"
                 class="ion-text-center"
                 style="font-size: 0.8em; font-style: italic"
-                >{{this.matchPending.createdAt}}</ion-col
+                >{{this.matchPending.acceptedAt}}</ion-col
               >
               <ion-col
                 size="12"
                 class="ion-text-center"
-                style="font-size: 0.8em; font-style: italic"
+                style="
+                  font-size: 0.8em;
+                  font-style: italic;
+                  white-space: pre-line;
+                "
                 >Regolamento: {{this.matchPending.rulesetName}}</ion-col
               >
               <ion-col
@@ -122,10 +139,23 @@
       </div>
     </div>
     <div *ngIf="!showSubscribeBox && !isLeader">
-      <ion-card style="background: white; text-align: center; display: flex; justify-content: center; flex-direction: column; align-items: center; padding: 15px" width="100%">
-        <ion-avatar width="50" height="50"><img src="{{tournamentDetail.imgUrl}}"/></ion-avatar><br>
-        <b>{{userTeam.name}}</b><br>
-        {{userTeam.rank}}&deg; Posizione<br>
+      <ion-card
+        style="
+          background: white;
+          text-align: center;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+          padding: 15px;
+        "
+        width="100%"
+      >
+        <ion-avatar width="50" height="50"
+          ><img src="{{tournamentDetail.imgUrl}}" /></ion-avatar
+        ><br />
+        <b>{{userTeam.name}}</b><br />
+        {{userTeam.rank}}&deg; Posizione<br />
         <div *ngIf="showMatchPending && alreadyMatched">
           <ion-grid>
             <ion-row style="width: 100%">
@@ -188,7 +218,12 @@
   <div
     id="classifica"
     *ngIf="showClassifica"
-    style="overflow-y: scroll !important; height: 100%; margin-top: 15px"
+    style="
+      overflow-y: scroll !important;
+      max-height: 100%;
+      margin-top: 15px;
+      padding-bottom: 250px;
+    "
   >
     <ion-grid>
       <ion-row class="header">
@@ -206,7 +241,12 @@
       >
         <ion-col size="1.4">{{i + 1}}</ion-col>
         <ion-col size="5.6">{{team.name}}</ion-col>
-        <ion-col size="2">{{team.elo}}</ion-col>
+        <ion-col size="2" *ngIf="tournamentDetail.type === 'LADDER'"
+          >{{team.elo}}</ion-col
+        >
+        <ion-col size="2" *ngIf="tournamentDetail.type === 'TOURNAMENT'"
+          >{{team.points}}</ion-col
+        >
         <ion-col size="1">{{team.wins}}</ion-col>
         <ion-col size="1">{{team.ties}}</ion-col>
         <ion-col size="1">{{team.losses}}</ion-col>
@@ -216,9 +256,253 @@
   <div
     id="regolamento"
     *ngIf="showRegolamento"
-    style="overflow-y: scroll !important; margin-top: 15px"
+    style="
+      overflow-y: scroll !important;
+      margin-top: 15px;
+      white-space: pre-line;
+      padding-bottom: 250px;
+    "
   >
-    Regolamento & Settaggi<br />{{this.tournamentDetail.ruleset.description}}
+    <ion-card
+      style="background: rgb(141, 27, 27) !important; color: white !important"
+    >
+      <ion-card-header style="font-weight: bold">
+        <ion-grid style="background: transparent; color: white !important">
+          <ion-row (click)="showDescription('regolamento')">
+            <ion-col size="10">Regolamento</ion-col>
+            <ion-col size="2"
+              ><i id="angle-regolamento" class="fas fa-angle-down"></i
+            ></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-header>
+      <ion-card-content id="desc-regolamento" style="display: none">
+        <ol>
+          <li>
+            Entrambi i team devono premunirsi ad effettuare eventuali foto o
+            video delle mappe giocate: devono essere visibili i player in
+            partita e il risultato. Ogni disputa dovrà essere documentata,
+            altrimenti lo staff di 4TP non sarà in grado di prendere una
+            decisione in merito, dunque la CW potrebbe essere cancellata.
+          </li>
+          <li>
+            I Leader e Co-Leader di entrambi i team prima di iniziare la CW
+            devono controllare che i settaggi della lobby siano quelli giusti
+            come da regolamento. Nel momento in cui la CW è già stata riportata,
+            lo staff non accetterà nessuna lamentela in merito e quindi
+            confermerà il risultato.
+          </li>
+          <li>
+            Il team che hosta, se inserirà i settaggi errati (indicati in rosso
+            nel regolamento ‘settaggi’), perderà la mappa a tavolino.
+          </li>
+          <li>
+            Nel caso in cui determinati player non siano presenti nella caserma,
+            non possono giocare la CW, quindi devono abbandonare immediatamente
+            la lobby prepartita. Se il match dovesse iniziare e finire, lo staff
+            riterrà valido il risultato e potrà decidere di prendere
+            provvedimenti verso i due team.
+          </li>
+          <li>
+            Nel caso in cui un team si presenti nella lobby prepartita in
+            inferiorità numerica rispetto agli accordi accettati e visionati
+            nella sfida, la partita dovrà comunque iniziare, ma mai con meno di
+            4 player. ESEMPIO: 5v4 sì, mentre 4v3, 5v3 e 4v2 no.
+          </li>
+          <li>
+            Se durante la mappa in corso un player dovesse crashare, non può
+            essere sostituito da un altro player che non era presente nella
+            mappa in corso. Durante l’intermezzo tra una mappa e l'altra si
+            possono effettuare le sostituzioni dei player, a patto che siano
+            presenti nella caserma di quel team.
+          </li>
+          <li>
+            Durante la CW è consentito avere al massimo uno spettatore per team
+            e deve obbligatoriamente appartenere alla caserma di quel team.
+            Inoltre, lo spettatore durante la partita dovrà guardare solo il
+            proprio team; se questo non dovesse accadere si potrà richiedere la
+            mappa a tavolino.
+          </li>
+          <li>
+            Se durante la mappa uno o più player dovessero crashare e non
+            riuscissero più a rientrare a mappa in corso, il team che ha perso
+            il/i player/s dovrà far stoppare la partita a fine round per far
+            entrare il/i player/s.
+          </li>
+          <li>
+            Nel caso in cui l’host della partita dovesse far crashare la lobby
+            per qualsiasi motivo a round in corso [PRIMA KILL EFFETTUATA]
+            (disconnessione da internet, errore del gioco ecc.), quel round sarà
+            assegnato al team avversario. Se l'host dovesse crashare entro
+            l'inizio del primo round, il round non verrà assegnato vinto a
+            nessuno; se invece il round è finito e l'host dovesse crashare, non
+            verranno dati altri round vinti oltre a quello appena concluso.
+          </li>
+          <li>
+            Se dovesse crashare la connessione a qualsiasi player all'inizio del
+            primo round (entro la prima kill), l'host deve stoppare la partita,
+            invitare il player crashato e ripartire con il player in questione .
+          </li>
+          <li>
+            Se un team non si presenta per lo svolgimento della CW, contattare
+            un qualsiasi admin, che verificherà effettivamente la loro presenza.
+            Se il team avversario non fosse presente, perderà il match a
+            tavolino.
+          </li>
+          <li>
+            Le CW accettate vanno obbligatoriamente giocate. PROVVEDIMENTO:
+            perdita a tavolino della CW. 13) I match dovranno essere aleatori e
+            casuali, difatti è vietato accordarsi con altri team. Se lo staff
+            dovesse venire a conoscenza di qualsiasi accordo, verranno presi
+            provvedimenti in merito. PROVVEDIMENTO: ban di entrambi i team per 3
+            giorni.
+          </li>
+          <li>
+            Se il team avversario dovesse tardare il regolare svolgimento del
+            match dopo 15 minuti di attesa, contattare immediatamente un
+            qualsiasi admin che deciderà in base ai tempi di attesa, se
+            assegnare o meno la CW a tavolino.
+          </li>
+          <li>
+            E' fondamentale essere il più rapidi possibili tra una mappa e
+            l’altra in modo da garantire il corretto svolgimento del match; tra
+            una mappa e l’altra sono previsti 5 minuti di attesa (non di più).
+          </li>
+          <li>
+            Le CW devono essere riportate entro 3 ore, per quanto riguarda la
+            ladder. Mentre le CW devono essere riportate entro 12 ore, per
+            quanto riguarda i tornei. Nel caso in cui uno dei due team non
+            dovesse confermare il risultato entro le 3/12 ore (dipende dal tipo
+            di sfida ladder/torneo), siete pregati di contattare un qualsiasi
+            admin che provvederà a riportare il risultato di quest’ultima.
+          </li>
+          <li>
+            Il team che hosta potrà scegliere in quale squadra partire (difesa o
+            attacco). In genere, preghiamo a tutti di attenersi alla modalità
+            default: TEAM HOST: DIFESA TEAM SFIDANTE: ATTACCO In caso di
+            pareggio nelle prime due mappe, la terza mappa dovrà essere hostata
+            dal team che ha vinto più round durante le mappe precedenti. Nel
+            caso in cui i round dovessero essere pari, hosterá la terza mappa il
+            team che ha hostato la prima mappa e il team avversario potrà
+            scegliere la squadra (difesa o attacco).
+          </li>
+          <li>
+            Durante la registrazione ad una ladder/torneo, utilizzare un nome
+            del team inadeguato o inappropriato (parolacce, bestemmie, ecc.)
+            comporta la cancellazione del team e il ban di quest’ultimo.
+            PROVVEDIMENTO: cancellazione del team e ban di 3 giorni.
+          </li>
+          <li>
+            Bisognerà attendere 4 giorni dalla creazione del team prima che si
+            possa effettuare la cancellazione. La richiesta dovrà essere
+            effettuata contattando un qualsiasi admin.
+          </li>
+          <li>
+            Il team si potrà cancellare prima dei 4 giorni obbligatori (regola
+            21), solo se non ha effettuato nessuna CW.
+          </li>
+          <li>
+            La lobby di gioco di una CW deve essere chiusa e nessuno può entrare
+            al dì fuori dei player di quei team che devono giocare. In caso
+            dovesse entrare un player a caso non appartenente ad uno dei due
+            team, bisognerà stoppare e ricominciare dall’ultimo risultato,
+            l’host è tenuto a rifare e chiudere la lobby per evitare ulteriori
+            disagi.
+          </li>
+          <li>
+            Se la connessione dell'host non dovesse essere buona e stabile, i
+            player della squadra avversaria devono suicidarsi e contattare un
+            qualsiasi admin; la mappa dovrà ricominciare dall’ultimo risultato.
+          </li>
+          <li>
+            Nessun team è autorizzato a dare o prendersi la vittoria a tavolino
+            di un match, solo lo staff di 4TP può farlo, se dovesse accadere i
+            due team verranno penalizzati di 50 punti ELO ciascuno nella ladder
+            alla quale stanno partecipando.
+          </li>
+          <li>
+            Un match si potrà cancellare solo se entrambi i team sono d'accordo.
+            25) É vietato giocare a schermo condiviso.
+          </li>
+          <li>
+            Se uno o più player usa un accessorio bannato (caricatori aumentati
+            ecc.), il proprio team perderà la mappa a tavolino.
+          </li>
+          <li>
+            Nel caso avvenga una contestazione di un match, i leader di entrambi
+            i team sono obbligati a contattare lo staff entro le successive 24
+            ore; se questo non dovesse avvenire lo staff provvederà alla
+            cancellazione del match in questione.
+          </li>
+          <li>
+            Nel caso una mappa dovesse iniziare in situazione di inferiorità
+            numerica (4v5) sarà consentito al quinto player del team in
+            inferiorità numerica di unirsi a mappa in corso, ma dovrà
+            appartenere alla caserma di quel team ed essere in regola con orario
+            d’entrata (minimo 2 ore).
+          </li>
+          <li>
+            Durante una CW contestata se solo uno dei due team contatterà lo
+            staff fornendo tutte le prove della propria vittoria, entro le 24
+            ore previste, gli verrà conferita la vittoria.
+          </li>
+          <li>
+            Se durante una CW uno o più player dovessero usare FMJ, il team
+            offeso dovrà munirsi di prove concrete (clip) per verificare in
+            lobby privata che effettivamente non si tratti di un bug del gioco.
+            Successivamente contattare lo staff che provvederà immediatamente a
+            bannare il player da tutte le competizioni di 4TP e a dare la CW
+            vinta al team offeso. PROVVEDIMENTO: ban del player per 7 giorni +
+            CW a tavolino per il team offeso.
+          </li>
+        </ol>
+        REGOLE PLAYER/TEAM
+        <ol>
+          <li>
+            E' vietato giocare su 4TP con doppi account. PROVVEDIMENTO: ban del
+            team per 7 giorni, ban del player in questione per 14 giorni e
+            squalifica da ogni ladder/torneo ufficiale di 4TP.
+          </li>
+          <li>
+            La descrizione del team non dovrà contenere nessuna
+            bestemmia/insulto. PROVVEDIMENTO: ban del team per 3 giorni da
+            qualsiasi competizione di 4TP.
+          </li>
+          <li>
+            Sono severamente vietati insulti a sfondo razzista/sessista in
+            competizioni live/streaming. PROVVEDIMENTO: ban del player/team per
+            3 giorni.
+          </li>
+          <li>
+            Se un utente è stato bannato, non potrà effettuare CW per tutta la
+            durata del ban. PROVVEDIMENTO: allungamento dei giorni di ban per
+            questo utente (da 3 a 5 giorni addizionali).
+          </li>
+          <li>
+            Se un team farà giocare un utente bannato, il team in questione
+            verrà bannato. PROVVEDIMENTO: ban del team per 1 giorno.
+          </li>
+        </ol>
+      </ion-card-content>
+    </ion-card>
+    <ion-card
+      style="background: white !important; color: #2d2d2d !important"
+      *ngFor="let ruleset of tournamentDetail.rulesets"
+    >
+      <ion-card-header style="font-weight: bold">
+        <ion-grid>
+          <ion-row (click)="showDescription(ruleset._id)">
+            <ion-col size="10">{{ruleset.name}} </ion-col>
+            <ion-col size="2"
+              ><i id="{{'angle-'+ruleset._id}}" class="fas fa-angle-down"></i
+            ></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-header>
+      <ion-card-content id="{{'desc-'+ruleset._id}}" style="display: none">
+        {{ruleset.description}}
+      </ion-card-content>
+    </ion-card>
   </div>
   <div
     id="matches"
@@ -228,10 +512,10 @@
     <div *ngIf="counterMatchPending != 0">
       <ion-text>Match in corso: {{counterMatchPending}}</ion-text>
       <ion-grid class="no-background">
-        <ion-row *ngFor="let match of matchesList, let i = index" >
+        <ion-row *ngFor="let match of matchesList, let i = index">
           <ion-row
             *ngIf="match.status == 'PENDING' && match.teamOne && match.teamTwo"
-            style="width: 100%; margin-bottom: 2px;"
+            style="width: 100%; margin-bottom: 2px"
           >
             <ion-col
               size="5"
@@ -258,13 +542,20 @@
         </ion-row>
       </ion-grid>
     </div>
-    <div *ngIf="counterMatchClosed != 0" style="margin-top: 15px; padding-bottom: 150px">
+    <div
+      *ngIf="counterMatchClosed != 0"
+      style="margin-top: 15px; padding-bottom: 150px"
+    >
       <ion-text>Match conclusi: {{counterMatchClosed}}</ion-text>
       <ion-grid class="no-background">
-        <ion-row *ngFor="let match of matchesList, let i = index" style="margin-bottom: 2px;">
+        <ion-row
+          *ngFor="let match of matchesList, let i = index"
+          style="margin-bottom: 2px"
+        >
           <ion-row
             style="width: 100%"
             *ngIf="match.status=='TEAM1' || match.status=='TEAM2'"
+            [class]="match.status=='TEAM1' ? 'team-one' : 'team-two'"
           >
             <ion-col
               size="5"
@@ -299,7 +590,7 @@
               size="12"
               class="ion-text-center"
               style="font-size: 0.8em; font-style: italic"
-              >{{match.createdAt}}</ion-col
+              >{{match.acceptedAt}}</ion-col
             >
           </ion-row>
         </ion-row>
@@ -319,7 +610,7 @@
       <br />
       <ion-title>Crea Match</ion-title>
       <ion-grid
-        *ngIf="matchesNotAccepted.length > 0"
+        *ngIf="matchesNotAccepted && matchesNotAccepted.length > 0"
         style="max-width: 100%"
         class="vertical-center"
       >
@@ -368,7 +659,7 @@
         >
           <ion-select-option
             [value]="ruleset._id"
-            *ngFor="let ruleset of tournamentDetail.ruleset"
+            *ngFor="let ruleset of tournamentDetail.rulesets"
             >{{ruleset.name}}</ion-select-option
           >
         </ion-select>
@@ -384,11 +675,18 @@
           hasError="showErrorNrPlayers"
           interface="popover"
           placeholder="Seleziona il nr. di players..."
+          *ngIf="playersPerMatch.length > 1"
           required
         >
-          <ion-select-option value="4">4vs4</ion-select-option>
-          <ion-select-option value="5">5vs5</ion-select-option>
+          <ion-select-option
+            [value]="nrPlayers"
+            *ngFor="let nrPlayers of playersPerMatch"
+            >{{nrPlayers}} vs {{nrPlayers}}</ion-select-option
+          >
         </ion-select>
+        <ion-text *ngIf="playersPerMatch.length == 1"
+          >{{playersPerMatch[0] + ' vs '+ playersPerMatch[0]}}</ion-text
+        >
         <br />
         <ion-button color="success" type="submit">Crea Match</ion-button>
         <ion-button color="danger" (click)="closeCreateMatch()"

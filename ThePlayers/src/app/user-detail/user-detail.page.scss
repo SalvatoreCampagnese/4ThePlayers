@@ -1,54 +1,35 @@
-.card {
-    margin: 0 auto;
+ion-card.header-container{
+    min-height: 190px;
+    background: none !important;
+    border-radius: 15px;
+    position: relative;
+    overflow: visible;
 
-    .header {
-        height: 200px; // 20vh;
-
-        .avatar {
-            width: 160px; //40vw
-            height: 160px;
-            position: relative;
-            margin: 0 auto;
-
-            img {
-                display: block;
-                border-radius: 50%;
-                position: absolute;
-                bottom: calc(-1*(80px + 4px)); // -42px;
-                border: 2px solid #095338;
-                background-color: #fff;
-            }
-        }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: none !important;
+    .header-card{
+        min-height: 150px;
+        width: 100%;
+        background: #245339 !important;
+        z-index: 1;
+        border-radius: 15px;
+        background-position: center !important;
+        background-size: cover !important;
     }
-}
-
-.card-body {
-    background-color: #ffffff;
-    padding: 30px;
-    height: calc(100vh - (200px + 56px));
-    overflow: hidden;
-
-    .user-meta {
-        padding-top: 20px;
-
-        .playername {
-            font-size: 24px;
-            font-weight: 600;
-            color: #303940;
-        }
-
-        .country {
-            font-size: 90%;
-            color: #949ea6;
-            text-transform: uppercase;
-            margin: 0 auto;
-        }
+    .avatar-card{
+        background: #245339;
+        width: 120px;
+        height: 120px;
+        border-radius: 120px;
+        position: absolute;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        z-index: 2;
+        top: 65px;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.5);
     }
-
-    .user-tournament{
-        color: #2d2d2d;
-        h2{
-            color: #2d2d2d;
-        }
-    }
+    
 }

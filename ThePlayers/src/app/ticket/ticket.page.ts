@@ -13,20 +13,20 @@ export class TicketPage implements OnInit {
     private http: HttpClient,
     private router: Router,
     public env: GlobalEnv
-  ) { }
+  ) {}
 
-  attachments: any = [{ value: '' }];
+  attachments: any = [{ value: "" }];
   category: any;
   description: any;
   subject: any;
-  ngOnInit() { }
+  ngOnInit() {}
 
   createTicket() {
     let attachmentsList = [];
     if (this.attachments) {
-      this.attachments.forEach(element => {
+      this.attachments.forEach((element) => {
         if (element.value) {
-          attachmentsList.push(element.value)
+          attachmentsList.push(element.value);
         }
       });
     }
@@ -34,9 +34,7 @@ export class TicketPage implements OnInit {
       subject: this.subject,
       description: this.description,
       category: this.category,
-      tournamentId: null,
-      matchId: null,
-      attachments: attachmentsList
+      attachments: attachmentsList,
     };
     this.http
       .post(`${this.env.baseUri}/tickets`, dataToPost)
@@ -46,7 +44,7 @@ export class TicketPage implements OnInit {
   }
 
   addAttachment() {
-    this.attachments.length < 5 ? this.attachments.push({ value: '' }) : "";
+    this.attachments.length < 5 ? this.attachments.push({ value: "" }) : "";
   }
   removeAttachment(i) {
     i ? this.attachments.splice(i, 1) : "";

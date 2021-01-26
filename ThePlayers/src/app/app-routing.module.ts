@@ -113,6 +113,10 @@ const routes: Routes = [
     path: 'bracket-tournament',
     loadChildren: () => import('./bracket-tournament/bracket-tournament.module').then( m => m.BracketTournamentPageModule)
   },
+  {
+    path: 'buy-credits',
+    loadChildren: () => import('./buy-credits/buy-credits.module').then( m => m.BuyCreditsPageModule)
+  },
 
 ];
 

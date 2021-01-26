@@ -15,9 +15,10 @@ import { far } from "@fortawesome/free-regular-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { GlobalEnv } from "./env";
 import { Network } from "@ionic-native/network/ngx";
-import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+import { AuthInterceptor } from "./interceptors/auth.interceptor";
+import { ServiceWorkerModule } from "@angular/service-worker";
+import { environment } from "../environments/environment";
+import { InAppPurchase2 } from "@ionic-native/in-app-purchase-2/ngx";
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,7 +28,9 @@ import { environment } from '../environments/environment';
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register("ngsw-worker.js", {
+      enabled: environment.production,
+    }),
   ],
   providers: [
     StatusBar,
@@ -35,8 +38,9 @@ import { environment } from '../environments/environment';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     GlobalEnv,
     Network,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    InAppPurchase2,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

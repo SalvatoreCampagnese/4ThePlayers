@@ -25,9 +25,9 @@ export class ModalPageCreateTeamPage implements OnInit {
     private http: HttpClient,
     private router: Router,
     public env: GlobalEnv
-  ) { }
+  ) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   CreateTeam() {
     this.env.isLoading = true;
@@ -44,25 +44,25 @@ export class ModalPageCreateTeamPage implements OnInit {
 
   createTeamRest(token) {
     if (!this.teamname) {
-      window.alert('Inserisci un nome al team');
+      window.alert("Inserisci un nome al team");
       return;
     }
     let urlImg;
     switch (this.selectedAvatar) {
       case 1:
-        urlImg = "https://i.imgur.com/test12.jpeg";
+        urlImg = "https://i.imgur.com/jAMwQUm.png";
         break;
       case 2:
-        urlImg = "https://i.imgur.com/test123.jpeg";
+        urlImg = "https://i.imgur.com/OCT1szw.png";
         break;
       case 3:
-        urlImg = "https://i.imgur.com/2HZCGsX.jpeg";
+        urlImg = "https://i.imgur.com/LoLm4DC.png";
         break;
       case 4:
-        urlImg = "https://i.imgur.com/2HZCGsX.jpeg";
+        urlImg = "https://i.imgur.com/kVClvf4.png";
         break;
       default:
-        urlImg = "https://i.imgur.com/2HZCGsX.jpeg";
+        urlImg = "https://i.imgur.com/OCT1szw.png";
         break;
     }
     const dataPost = {

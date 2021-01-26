@@ -19,7 +19,7 @@ export class UsersPage implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {}
   userSearch: string = null;
   teamId: any;
   teamObj: any;
@@ -64,19 +64,17 @@ export class UsersPage implements OnInit {
       this.http
         .post(
           this.env.baseUri +
-          `/tournaments/${this.tournamentId}/teams/${this.teamId}/invites`,
+            `/tournaments/${this.tournamentId}/teams/${this.teamId}/invites`,
           dataToPost
         )
         .subscribe(
           (resp) => {
             this.env.isLoading = false;
             window.alert("Invitato correttamente");
-            location.reload();
           },
           (error) => {
             this.env.isLoading = false;
             window.alert(error.error.errors[0].msg);
-            location.reload();
           }
         );
     } else {
@@ -100,7 +98,7 @@ export class UsersPage implements OnInit {
             this.http
               .get(
                 this.env.baseUri +
-                `/tournaments/${this.tournamentId}/teams/${this.teamId}`
+                  `/tournaments/${this.tournamentId}/teams/${this.teamId}`
               )
               .subscribe((resp) => {
                 this.teamObj = resp;

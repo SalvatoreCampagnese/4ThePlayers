@@ -59,7 +59,6 @@ export class InvitesPage implements OnInit {
                   }
                 },
                 (error) => {
-                  invitesList[i].teamName = "Errore nome team.";
                   if (invitesList[i].status === "PENDING") {
                     this.invitesListPending.push(invitesList[i]);
                   } else {

@@ -18,7 +18,7 @@ export class UserTicketsPage implements OnInit {
     private authService: AuthService,
     private http: HttpClient,
     public env: GlobalEnv
-  ) { }
+  ) {}
 
   ticketsList: any = [];
   ticketInfo: any = [];
@@ -30,7 +30,7 @@ export class UserTicketsPage implements OnInit {
       if (this.authService.isLoggedIn) {
         Storage.get({ key: "token" }).then((data) => {
           let decodedToken = jwtDecode(data.value);
-          this.loggedUserId = decodedToken["id"]
+          this.loggedUserId = decodedToken["id"];
           this.getTickets();
         });
       } else {
@@ -65,10 +65,12 @@ export class UserTicketsPage implements OnInit {
   openTicketDetail(ticketId) {
     if (!ticketId) return;
     this.ticketInfo = [];
-    this.http.get(`${this.env.baseUri}/tickets/${ticketId}`).subscribe((resp) => {
-      this.ticketInfo = resp;
-      this.showTicketInfo = true;
-    });
+    this.http
+      .get(`${this.env.baseUri}/tickets/${ticketId}`)
+      .subscribe((resp) => {
+        this.ticketInfo = resp;
+        this.showTicketInfo = true;
+      });
   }
 
   closeTicketDetail() {
@@ -79,9 +81,12 @@ export class UserTicketsPage implements OnInit {
   addMessageToTicket(ticketId) {
     if (!this.newMessage) return;
     this.http
-      .post(`${this.env.baseUri}/tickets/${ticketId}`, { message: this.newMessage, fromAdminPanel: false })
+      .post(`${this.env.baseUri}/tickets/${ticketId}/messages`, {
+        message: this.newMessage,
+        fromAdminPanel: false,
+      })
       .subscribe((resp) => {
-        window.alert('Messaggio inviato correttamente.')
+        window.alert("Messaggio inviato correttamente.");
         location.reload();
       });
   }

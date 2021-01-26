@@ -25,9 +25,9 @@ export class SignupPage implements OnInit {
     private authService: AuthService,
     private http: HttpClient,
     private env: GlobalEnv
-  ) { }
+  ) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   SignupForm() {
     this.authService
@@ -38,22 +38,27 @@ export class SignupPage implements OnInit {
             Storage.set({
               key: "token",
               value: data["token"],
-            }).then(
-              () => {
-                this.http.get(`${this.env.baseUri}/auth/email`).subscribe(
-                  (data) => {
-                    Storage.remove({ key: "token" });
-                    this.showCreateTeamModal();
-                  },
-                  (error) => {
-                    window.alert("Errore sendEmail" + JSON.stringify(error));
-                  }
-                );
-              });
+            }).then(() => {
+              this.http.get(`${this.env.baseUri}/auth/email`).subscribe(
+                (data) => {
+                  Storage.remove({ key: "token" });
+                  this.showCreateTeamModal();
+                },
+                (error) => {
+                  window.alert(
+                    "Errore sendEmail" +
+                      JSON.stringify(error.error.errors[0].msg)
+                  );
+                }
+              );
+            });
           }
         },
         (error) => {
-          window.alert("Errore in registrazione " + JSON.stringify(error));
+          window.alert(
+            "Errore in registrazione " +
+              JSON.stringify(error.error.errors[0].msg)
+          );
         }
       );
   }

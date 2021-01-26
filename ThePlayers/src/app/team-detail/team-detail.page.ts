@@ -19,7 +19,7 @@ export class TeamDetailPage implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {}
 
   teamId: any;
   userId: string;
@@ -27,6 +27,9 @@ export class TeamDetailPage implements OnInit {
   token: string;
   tournamentId: string;
   teamObj: any;
+  editTeamStatus: boolean = false;
+  isTeamNameChanged: boolean = true;
+  teamName: string = null;
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params["teamId"] && params["tournamentId"]) {
@@ -46,10 +49,15 @@ export class TeamDetailPage implements OnInit {
       this.http
         .get(
           this.env.baseUri +
-          `/tournaments/${this.tournamentId}/teams/${this.teamId}`
+            `/tournaments/${this.tournamentId}/teams/${this.teamId}`
         )
         .subscribe((resp) => {
           this.teamObj = resp;
+          this.teamName = this.teamObj.name;
+          if (resp["imgUrl"]) {
+            let el = document.getElementById("avatarCard");
+            el.style.backgroundImage = `url(${resp["imgUrl"]})`;
+          }
           for (var i = 0; i < resp["members"].length; i++) {
             const member = resp["members"][i];
             if (member.userId) {
@@ -61,15 +69,12 @@ export class TeamDetailPage implements OnInit {
               )
                 this.isLeader = true;
             }
-
             if (member.dateJoined) {
               const today = new Date();
-              const dateJoined = new Date(member.dateJoined)
-              const UTC = new Date(Date.UTC(dateJoined.getFullYear(), dateJoined.getMonth(), dateJoined.getDate(), dateJoined.getHours(), dateJoined.getMinutes(), dateJoined.getSeconds(), dateJoined.getMilliseconds()))
+              const dateJoined = new Date(member.dateJoined);
               const diffTime = today.getTime() - dateJoined.getTime();
               const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
               member.isOk = false;
-              console.log(diffHours)
               if (diffHours >= 4) {
                 member.isOk = true;
               }
@@ -82,14 +87,14 @@ export class TeamDetailPage implements OnInit {
     if (userObj) {
       this.router.navigate(["/user-detail"], {
         queryParams: {
-          userObj: JSON.stringify(userObj),
+          userId: userObj.userId,
         },
       });
     }
   }
 
   removeMember(userObj) {
-    const text = "Sei sicuro di voler rimuovere il player?"
+    const text = "Sei sicuro di voler rimuovere il player?";
     var r = confirm(text);
     if (userObj && r === true) {
       const userId = userObj.userId;
@@ -97,7 +102,7 @@ export class TeamDetailPage implements OnInit {
         this.http
           .patch(
             this.env.baseUri +
-            `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
+              `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
             { membersToRemove: [userId] }
           )
           .subscribe(
@@ -113,11 +118,13 @@ export class TeamDetailPage implements OnInit {
   }
 
   quitTeam() {
-    if (this.userId) {
+    const text = "Sei sicuro di voler promuovere il player a leader del team?";
+    var r = confirm(text);
+    if (this.userId && r == true) {
       this.http
         .patch(
           this.env.baseUri +
-          `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
+            `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
           { membersToRemove: [this.userId] }
         )
         .subscribe(
@@ -132,15 +139,14 @@ export class TeamDetailPage implements OnInit {
   }
 
   updateLeader(member) {
-
-    const text = "Sei sicuro di voler promuovere il player a leader del team?"
+    const text = "Sei sicuro di voler promuovere il player a leader del team?";
     var r = confirm(text);
     if (member && r === true) {
       this.http
         .patch(
           this.env.baseUri +
-          `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
-          { "newLeader": member.userId }
+            `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
+          { newLeader: member.userId }
         )
         .subscribe(
           (resp) => {
@@ -148,6 +154,36 @@ export class TeamDetailPage implements OnInit {
           },
           (error) => {
             window.alert("errore nella rimozione del player.");
+          }
+        );
+    }
+  }
+  editTeam() {
+    this.editTeamStatus = true;
+  }
+  changeUsername() {
+    if (this.teamName != this.teamObj.name) this.isTeamNameChanged = false;
+    else this.isTeamNameChanged = true;
+  }
+  onCloseEdit() {
+    this.editTeamStatus = false;
+  }
+  onConfirmEdit() {
+    const text = "Sei sicuro di voler rinominare il team?";
+    var r = confirm(text);
+    if (r === true) {
+      this.http
+        .patch(
+          this.env.baseUri +
+            `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
+          { name: this.teamName }
+        )
+        .subscribe(
+          (resp) => {
+            location.reload();
+          },
+          (error) => {
+            window.alert("errore nel cambio nome team");
           }
         );
     }

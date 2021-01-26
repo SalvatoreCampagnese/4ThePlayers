@@ -1,21 +1,37 @@
 <ion-content id="backgroundimage">
-
   <ion-card-content>
     <ion-img class="logo" src="../../assets/img/logo.png"></ion-img>
     <form (ngSubmit)="SignupForm()">
       <ion-item color="white">
         <ion-label><i class="fas fa-user"></i></ion-label>
-        <ion-input type="text" [(ngModel)]="username" name="username"></ion-input>
+        <ion-input
+          type="text"
+          [(ngModel)]="username"
+          placeholder="Username..."
+          name="username"
+        ></ion-input>
       </ion-item>
       <ion-item color="white">
         <ion-label><i class="fas fa-at"></i></ion-label>
-        <ion-input type="email" [(ngModel)]="email" name="email"></ion-input>
+        <ion-input
+          type="email"
+          [(ngModel)]="email"
+          placeholder="Email..."
+          name="email"
+        ></ion-input>
       </ion-item>
       <ion-item color="white">
         <ion-label><i class="fas fa-key"></i></ion-label>
-        <ion-input type="password" [(ngModel)]="password" name="password"></ion-input>
+        <ion-input
+          type="password"
+          [(ngModel)]="password"
+          placeholder="Password..."
+          name="password"
+        ></ion-input>
       </ion-item>
-      <ion-button class="submit-button" type="submit" block>Registrati</ion-button>
+      <ion-button class="submit-button" type="submit" block
+        >Registrati</ion-button
+      >
       <ion-card-subtitle>Gi&agrave; registrato?</ion-card-subtitle>
       <ion-card-title (click)="LoginPage()">ACCEDI!</ion-card-title>
     </form>

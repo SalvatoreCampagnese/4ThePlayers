@@ -44,9 +44,32 @@ ion-grid.no-background {
 
 ion-row {
     ion-row {
-        background: white;
+        background: #2d2d2d;
+        color: white;
         border-radius: 5px;
         padding: 2px;
+    }
+    &.team-one:after {
+        content: '';
+        width: 100%;
+        background: linear-gradient(to right, #15981359, transparent, transparent, #d2000059);
+        position: relative;
+        height: 100%;
+        bottom: 100%;
+        border-radius: 5px;
+        left: 0px;
+        z-index: 1;
+    }
+    &.team-two:after {
+        content: '';
+        width: 100%;
+        background: linear-gradient(to left, #15981359, transparent, transparent, #d2000059);
+        position: relative;
+        height: 100%;
+        bottom: 100%;
+        border-radius: 5px;
+        left: 0px;
+        z-index: 1;
     }
 }
 

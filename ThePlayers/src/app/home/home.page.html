@@ -41,7 +41,7 @@
         <ion-col
           *ngFor="let game of gamesList"
           size="6"
-          (click)="DetailGame(game.id, game.name)"
+          (click)="DetailGame(game._id, game.name)"
         >
           <ion-card
             color="primary"

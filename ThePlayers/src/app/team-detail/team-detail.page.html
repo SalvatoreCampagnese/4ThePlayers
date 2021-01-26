@@ -15,62 +15,158 @@
 </ion-header>
 
 <ion-content>
-  <div class="card" style="z-index: 11">
-    <div class="header" style="z-index: 12">
-      <div class="avatar" style="z-index: 13">
-        <img style="z-index: 14" src="../../assets/img/avatar-1.jpg" alt="" />
-      </div>
-    </div>
-    <div class="card-body" style="overflow-y: scroll !important; z-index: 10">
-      <div class="user-meta ion-text-center">
-        <h3 class="playername">{{teamObj && teamObj.name}}</h3>
+  <ion-card class="header-container">
+    <ion-card
+      class="header-card"
+      style="
+        background-image: url('https://i.imgur.com/6c0lZoy.png') !important;
+      "
+    ></ion-card>
+    <ion-card class="avatar-card" id="avatarCard"></ion-card>
+  </ion-card>
 
-        <div class="user-tournament">
-          <ion-text>Membri</ion-text>
-          <ion-grid *ngIf="teamObj">
-            <ion-row
-              size="12"
-              *ngFor="let member of teamObj.members"
-              class="row-align-center"
-            >
-              <ion-col
-                [size]="(member.role === 'LEADER' || !isLeader) ? 12 : 8"
-                (click)="showUserPage(member)"
-              >
-                <ion-card [class]="member.isOk ? '' : 'not-ok'">
-                  <ion-item>
-                    <ion-avatar item-start style="border: 1px solid green">
-                      <img src="../../assets/img/avatar-1.jpg" />
-                    </ion-avatar>
-                    <div class="user-data">
-                      <h3>{{member.username}}</h3>
-                      <p *ngIf="member.role == 'LEADER'">Leader</p>
-                    </div>
-                  </ion-item>
-                </ion-card>
-              </ion-col>
-              <ion-col size="2" *ngIf="isLeader && member.role != 'LEADER'">
-                <ion-button
-                  *ngIf="isLeader && member.role != 'LEADER'"
-                  color="danger"
-                  (click)="removeMember(member)"
-                >
-                  <i class="fas fa-times"></i>
-                </ion-button>
-              </ion-col>
-              <ion-col size="2" *ngIf="isLeader && member.role != 'LEADER'">
-                <ion-button
-                  *ngIf="this.isLeader && member.role != 'LEADER'"
-                  color="danger"
-                  (click)="updateLeader(member)"
-                >
-                  <i class="fas fa-crown"></i>
-                </ion-button>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </div>
-      </div>
+  <div class="card-body" style="overflow-y: scroll !important; z-index: 10">
+    <ion-grid style="padding: 0px 15px">
+      <ion-row>
+        <ion-col size="10"><h3>{{teamObj && teamObj.name}}</h3></ion-col>
+        <ion-col size="2"
+          ><ion-button color="success" (click)="editTeam()" *ngIf="isLeader"
+            ><i class="fas fa-pen"></i></ion-button
+          ><ion-button color="danger" (click)="quitTeam()" *ngIf="!isLeader"
+            ><i class="fas fa-times"></i></ion-button
+        ></ion-col>
+      </ion-row>
+    </ion-grid>
+    <div class="user-tournament" style="padding: 0px 15px">
+      <ion-text style="padding-left: 5px">Membri</ion-text>
+      <ion-grid *ngIf="teamObj">
+        <ion-row
+          size="12"
+          *ngFor="let member of teamObj.members, let i = index"
+          class="row-align-center"
+        >
+          <ion-col [size]="12" (click)="showUserPage(member)">
+            <ion-card [class]="member.isOk ? 'member ok' : 'member not-ok'">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="3" style="padding: 0px"
+                    ><ion-avatar item-start style="border: 1px solid green">
+                      <img src="../../assets/img/avatar-1.jpg" /> </ion-avatar
+                  ></ion-col>
+                  <ion-col size="9" style="padding: 0px">
+                    <h3
+                      style="
+                        margin: 5px;
+                        white-space: nowrap;
+                        margin: 5px;
+                        flex-wrap: nowrap;
+                        text-overflow: ellipsis;
+                        width: 100%;
+                        overflow: hidden;
+                      "
+                    >
+                      {{member.username}}
+                    </h3>
+                    <p
+                      *ngIf="member.role == 'LEADER'"
+                      style="padding: 0px 5px; margin: 0px !important"
+                    >
+                      Leader
+                    </p>
+                    <p
+                      style="
+                        padding: 0px 5px;
+                        margin: 0px !important;
+                        font-style: italic;
+                        font-size: 10px;
+                      "
+                    >
+                      <i class="fas fa-arrow-right"></i>
+                      {{member.dateJoined|date:'short'}}
+                    </p></ion-col
+                  >
+                </ion-row>
+                <ion-row style="width: 100%">
+                  <ion-col
+                    size="6"
+                    *ngIf="isLeader && member.role != 'LEADER'"
+                    style="text-align: center"
+                  >
+                    <ion-button
+                      *ngIf="isLeader && member.role != 'LEADER'"
+                      color="danger"
+                      (click)="removeMember(member)"
+                      >Rimuovi
+                    </ion-button>
+                  </ion-col>
+                  <ion-col
+                    size="6"
+                    *ngIf="isLeader && member.role != 'LEADER'"
+                    style="text-align: center"
+                  >
+                    <ion-button
+                      *ngIf="this.isLeader && member.role != 'LEADER'"
+                      color="danger"
+                      (click)="updateLeader(member)"
+                      >Leader
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div style="padding: 0px 15px">
+      Leggenda:
+      <ion-grid>
+        <ion-row
+          style="display: flex; justify-content: center; align-items: center"
+        >
+          <ion-col size="1"
+            ><div style="width: 7px; height: 7px; background: green">
+              &nbsp;
+            </div></ion-col
+          >
+          <ion-col size="11">Il player può giocare</ion-col>
+        </ion-row>
+        <ion-row
+          style="display: flex; justify-content: center; align-items: center"
+        >
+          <ion-col size="1"
+            ><div style="width: 7px; height: 7px; background: red">
+              &nbsp;
+            </div></ion-col
+          >
+          <ion-col size="11">Il player non ha superato le 4h</ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
+
+  <div class="editTeam" *ngIf="editTeamStatus" class="team-detail-container">
+    <div class="team-detail-modal">
+      <h2>Modifica team</h2>
+
+      <ion-item color="white">
+        <ion-label><i class="fas fa-pen"></i></ion-label>
+        <ion-input
+          clearOnEdit="false"
+          type="text"
+          [(ngModel)]="teamName"
+          name="teamName"
+          (ionChange)="changeUsername()"
+        ></ion-input>
+      </ion-item>
+      <ion-button
+        color="success"
+        (click)="onConfirmEdit()"
+        [disabled]="isTeamNameChanged"
+      >
+        Modifica
+      </ion-button>
+      <ion-button color="danged" (click)="onCloseEdit()">Chiudi</ion-button>
     </div>
   </div>
 </ion-content>

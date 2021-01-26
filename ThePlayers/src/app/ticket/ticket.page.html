@@ -38,7 +38,7 @@
       placeholder="Categoria..."
       style="width: 100%; min-height: 50px"
     >
-      <ion-select-option value="GENERAL INQUIRY">Generale</ion-select-option>
+      <ion-select-option value="GENERAL_INQUIRY">Generale</ion-select-option>
       <ion-select-option value="PAYMENT">Pagamento/Ordine</ion-select-option>
     </ion-select>
     <br />
@@ -57,7 +57,7 @@
               type="url"
               placeholder="Link allegato {{i+1}}... "
               [(ngModel)]="attachments[i].value"
-              name={{i}}
+              name="{{i}}"
             ></ion-input>
           </ion-item>
         </ion-col>

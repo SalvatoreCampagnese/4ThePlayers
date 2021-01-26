@@ -8,7 +8,7 @@ import { AuthService } from "src/app/services/auth.service";
 import { Plugins } from "@capacitor/core";
 import { GlobalEnv } from "../env";
 import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
-import jwtDecode from 'jwt-decode';
+import jwtDecode from "jwt-decode";
 const { Storage } = Plugins;
 
 @Component({
@@ -58,7 +58,7 @@ export class TournamentDetailPage implements OnInit {
     private http: HttpClient,
     public env: GlobalEnv,
     public loadingController: LoadingController
-  ) { }
+  ) {}
 
   loading: any;
   userId: string = null;
@@ -87,7 +87,7 @@ export class TournamentDetailPage implements OnInit {
         this.authService.getToken().then(() => {
           if (this.authService.isLoggedIn) {
             Storage.get({ key: "token" }).then((data) => {
-              this.userId = jwtDecode(data.value)['id'];
+              this.userId = jwtDecode(data.value)["id"];
               this.getTournamentDetail(this.idTournament, data.value);
             });
           } else {
@@ -121,11 +121,11 @@ export class TournamentDetailPage implements OnInit {
         this.tournamentDetail = response;
         // Guardo se l'utente ha un team
         const userTeam = this.tournamentDetail.userTeam,
-          ruleset = this.tournamentDetail.ruleset;
+          ruleset = this.tournamentDetail.rulesets;
         if (userTeam) {
           // Controllo se e' il leader
-          userTeam.members.forEach(item => {
-            if (item.userId == this.userId && item.role === 'LEADER') {
+          userTeam.members.forEach((item) => {
+            if (item.userId == this.userId && item.role === "LEADER") {
               this.isLeader = true;
             }
           });
@@ -152,7 +152,6 @@ export class TournamentDetailPage implements OnInit {
             // Il team non rispetta il nr di giocatori necessari
             this.showErrorTeam = true;
           }
-
         }
 
         this.checkIfHasMatch(this.userTeam);
@@ -172,7 +171,7 @@ export class TournamentDetailPage implements OnInit {
               this.userTeam.rank = rank;
             }
             rank++;
-          })
+          });
         }
         this.env.isLoading = false;
       },
@@ -195,8 +194,8 @@ export class TournamentDetailPage implements OnInit {
             this.counterMatchPending = 0;
             this.counterMatchClosed = 0;
             for (var i = 0; i < this.matchesList.length; i++) {
-              this.matchesList[i].createdAt = new Date(
-                this.matchesList[i].createdAt
+              this.matchesList[i].acceptedAt = new Date(
+                this.matchesList[i].acceptedAt
               ).toLocaleString("it");
               if (
                 this.matchesList[i] &&
@@ -213,10 +212,10 @@ export class TournamentDetailPage implements OnInit {
                 if (
                   (this.matchesList[i].teamOne &&
                     this.matchesList[i].teamOne._id ===
-                    this.tournamentDetail.userTeam._id) ||
+                      this.tournamentDetail.userTeam._id) ||
                   (this.matchesList[i].teamTwo &&
                     this.matchesList[i].teamTwo._id ===
-                    this.tournamentDetail.userTeam._id)
+                      this.tournamentDetail.userTeam._id)
                 ) {
                   if (
                     this.matchesList[i].teamOne._id ===
@@ -260,14 +259,14 @@ export class TournamentDetailPage implements OnInit {
                     this.matchPending = this.matchesList[i];
                     for (
                       var j = 0;
-                      j < this.tournamentDetail.ruleset.length;
+                      j < this.tournamentDetail.rulesets.length;
                       j++
                     ) {
                       if (
                         this.matchPending.rulesetId ===
-                        this.tournamentDetail.ruleset[j]._id
+                        this.tournamentDetail.rulesets[j]._id
                       ) {
-                        this.matchPending.rulesetName = this.tournamentDetail.ruleset[
+                        this.matchPending.rulesetName = this.tournamentDetail.rulesets[
                           j
                         ].name;
                       }
@@ -321,10 +320,10 @@ export class TournamentDetailPage implements OnInit {
   }
 
   changeResultMatch(matchObj, result) {
-    let text = ""
-    if (result == 'WIN') text = "Sei sicuro di aver vinto?"
-    else if (result == 'LOSS') text = "Sei sicuro di aver perso?"
-    else text = "Sei sicuro di aver pareggiato?"
+    let text = "";
+    if (result == "WIN") text = "Sei sicuro di aver vinto?";
+    else if (result == "LOSS") text = "Sei sicuro di aver perso?";
+    else text = "Sei sicuro di aver pareggiato?";
     var r = confirm(text);
     if (r == true) {
       if (this.tournamentDetail.userTeam._id) {
@@ -368,19 +367,20 @@ export class TournamentDetailPage implements OnInit {
       });
     return true;
   }
-
+  playersPerMatch: any = [];
   showCreateMatchFn() {
     this.matchesNotAccepted = [];
     this.http
       .get(`${this.env.baseUri}/tournaments/${this.idTournament}/matches`)
       .subscribe((response) => {
+        this.matchesNotAccepted = [];
         for (var i = 0; i < Object.keys(response).length; i++) {
           if (
             !response[i].teamTwo &&
             response[i].teamOne &&
             response[i].teamOne._id !== this.tournamentDetail.userTeam._id
           ) {
-            const ruleset = this.tournamentDetail.ruleset.find(
+            const ruleset = this.tournamentDetail.rulesets.find(
               (item) => item._id == response[i].rulesetId
             );
             response[i].rulesetName = ruleset.name;
@@ -389,6 +389,15 @@ export class TournamentDetailPage implements OnInit {
         }
         this.showModalCreateMatch = true;
       });
+    for (
+      let j = 0;
+      j <=
+      this.tournamentDetail.maxPlayersPerMatch -
+        this.tournamentDetail.minPlayersPerMatch;
+      j++
+    ) {
+      this.playersPerMatch[j] = this.tournamentDetail.minPlayersPerMatch + j;
+    }
   }
 
   closeCreateMatch() {
@@ -510,6 +519,20 @@ export class TournamentDetailPage implements OnInit {
         .subscribe((resp) => {
           location.reload();
         });
+    }
+  }
+
+  showDescription(rulesetId) {
+    const accordionPlatforms = document.getElementById(`desc-${rulesetId}`),
+      anglePlatforms = document.getElementById(`angle-${rulesetId}`);
+    if (accordionPlatforms.style.display == "none") {
+      accordionPlatforms.style.display = "block";
+      anglePlatforms.classList.remove("fa-angle-down");
+      anglePlatforms.classList.add("fa-angle-up");
+    } else {
+      accordionPlatforms.style.display = "none";
+      anglePlatforms.classList.remove("fa-angle-up");
+      anglePlatforms.classList.add("fa-angle-down");
     }
   }
 }
