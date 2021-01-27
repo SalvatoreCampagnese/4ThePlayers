@@ -347,6 +347,9 @@ export class TournamentDetailPage implements OnInit {
   }
 
   createMatchFn() {
+    if (this.playersPerMatch.length === 1) {
+      this.matchForm.nrPlayers = this.playersPerMatch[0];
+    }
     if (!this.matchForm.ruleset) this.showErrorRuleset = true;
     else this.showErrorRuleset = false;
     if (!this.matchForm.nrPlayers) this.showErrorNrPlayers = true;
@@ -392,11 +395,11 @@ export class TournamentDetailPage implements OnInit {
     for (
       let j = 0;
       j <=
-      this.tournamentDetail.maxPlayersPerMatch -
-        this.tournamentDetail.minPlayersPerMatch;
+      this.tournamentDetail.maxTeamSizePerMatch -
+        this.tournamentDetail.minTeamSizePerMatch;
       j++
     ) {
-      this.playersPerMatch[j] = this.tournamentDetail.minPlayersPerMatch + j;
+      this.playersPerMatch[j] = this.tournamentDetail.minTeamSizePerMatch + j;
     }
   }
 

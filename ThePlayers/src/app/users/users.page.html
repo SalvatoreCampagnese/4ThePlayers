@@ -11,8 +11,8 @@
   <ion-item color="white">
     <ion-label><i class="fas fa-search"></i></ion-label>
     <ion-input placeholder="Ricerca..." [(ngModel)]="userSearch"></ion-input>
-    <ion-button (click)="searchUser()">Ricerca</ion-button>
   </ion-item>
+  <ion-button (click)="searchUser()">Ricerca</ion-button>
   <br />
   <ion-text>
     <h2>Lista utenti</h2>
@@ -20,9 +20,6 @@
   <ion-grid style="padding: 5px">
     <ion-text *ngIf="usersFoundCounter == 0 && !userSearch"
       >Effettua una ricerca...</ion-text
-    >
-    <ion-text *ngIf="usersFoundCounter == 0 && userSearch"
-      >Nessun utente trovato...</ion-text
     >
     <ion-row *ngFor="let user of usersList">
       <ion-col size="10">{{user.username}}</ion-col>

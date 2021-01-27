@@ -22,6 +22,7 @@ export class UserDetailPage implements OnInit {
   userObj: any;
   tournamentsList: any = [];
   userId: string = null;
+  currentUserId: string = null;
   token: string;
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -35,6 +36,8 @@ export class UserDetailPage implements OnInit {
               this.userId = deserialized["id"];
               this.userObj["userId"] = deserialized["id"];
             } else {
+              const deserialized = jwtDecode(this.token);
+              this.currentUserId = deserialized["id"];
               this.userId = params["userId"];
             }
             this.showInfo();

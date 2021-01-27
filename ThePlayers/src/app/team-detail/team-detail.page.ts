@@ -29,6 +29,7 @@ export class TeamDetailPage implements OnInit {
   teamObj: any;
   editTeamStatus: boolean = false;
   isTeamNameChanged: boolean = true;
+  isMember: boolean = false;
   teamName: string = null;
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -66,8 +67,14 @@ export class TeamDetailPage implements OnInit {
               if (
                 member.userId === decodedToken["id"] &&
                 member.role === "LEADER"
-              )
+              ) {
                 this.isLeader = true;
+              } else if (
+                member.userId === decodedToken["id"] &&
+                member.role === "MEMBER"
+              ) {
+                this.isMember = true;
+              }
             }
             if (member.dateJoined) {
               const today = new Date();
@@ -118,21 +125,20 @@ export class TeamDetailPage implements OnInit {
   }
 
   quitTeam() {
-    const text = "Sei sicuro di voler promuovere il player a leader del team?";
+    const text = "Sei sicuro di voler uscire dal team?";
     var r = confirm(text);
     if (this.userId && r == true) {
       this.http
-        .patch(
+        .delete(
           this.env.baseUri +
-            `/tournaments/${this.tournamentId}/teams/${this.teamId}`,
-          { membersToRemove: [this.userId] }
+            `/tournaments/${this.tournamentId}/teams/${this.teamId}/user/${this.userId}`
         )
         .subscribe(
           (resp) => {
             location.reload();
           },
           (error) => {
-            window.alert("errore nella rimozione del player.");
+            window.alert("errore durante l'uscita dal team");
           }
         );
     }

@@ -32,7 +32,10 @@
         <ion-col size="2"
           ><ion-button color="success" (click)="editTeam()" *ngIf="isLeader"
             ><i class="fas fa-pen"></i></ion-button
-          ><ion-button color="danger" (click)="quitTeam()" *ngIf="!isLeader"
+          ><ion-button
+            color="danger"
+            (click)="quitTeam()"
+            *ngIf="!isLeader && isMember"
             ><i class="fas fa-times"></i></ion-button
         ></ion-col>
       </ion-row>
